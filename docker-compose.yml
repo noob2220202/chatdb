@@ -1,0 +1,16 @@
+services:
+  chatdb:
+    build: .
+    restart: unless-stopped
+    ports:
+      # 기본은 이 컴퓨터에서만 열린다. 밖에서 접속하려면 HTTPS 리버스 프록시 뒤에 두고
+      # CHATDB_COOKIE_SECURE=true 로 바꾼다.
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - path: .env
+        required: false
+    volumes:
+      - chatdb-data:/data
+
+volumes:
+  chatdb-data:
