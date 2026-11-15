@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from urllib.parse import parse_qs, unquote, urlsplit
+from urllib.parse import SplitResult, parse_qs, unquote, urlsplit
 
 from .models import LinkKind
 
@@ -44,7 +44,7 @@ class LinkTarget:
 
 
 def _public(name: str) -> LinkTarget:
-    if not _USERNAME_RE.match(name):
+    if not _USERNAME_RE.fullmatch(name):
         raise LinkError("그룹 아이디 형식이 올바르지 않아요.")
     if name.lower() in _RESERVED:
         raise LinkError("그룹 링크가 아니에요.")
@@ -55,9 +55,17 @@ def _invite(value: str) -> LinkTarget:
     value = value.strip()
     if value.isdigit():
         raise LinkError("전화번호 링크로는 그룹에 가입할 수 없어요.")
-    if not _HASH_RE.match(value):
+    if not _HASH_RE.fullmatch(value):
         raise LinkError("초대 링크 형식이 올바르지 않아요.")
     return LinkTarget(LinkKind.INVITE, value)
+
+
+def _split(text: str) -> SplitResult:
+    """urlsplit 이 던지는 ValueError(깨진 대괄호 등)를 LinkError 로 바꾼다."""
+    try:
+        return urlsplit(text)
+    except ValueError as exc:
+        raise LinkError("링크 형식이 올바르지 않아요.") from exc
 
 
 def parse_link(raw: str) -> LinkTarget:
@@ -78,7 +86,7 @@ def parse_link(raw: str) -> LinkTarget:
 
     lowered = text.lower()
     if lowered.startswith("tg://"):
-        parts = urlsplit(text)
+        parts = _split(text)
         query = parse_qs(parts.query)
         action = (parts.netloc or parts.path.lstrip("/")).lower()
         if action == "join" and query.get("invite"):
@@ -93,7 +101,7 @@ def parse_link(raw: str) -> LinkTarget:
 
     if "://" not in text:
         text = "https://" + text
-    parts = urlsplit(text)
+    parts = _split(text)
     host = (parts.hostname or "").lower()
     if host.startswith("www."):
         host = host[4:]

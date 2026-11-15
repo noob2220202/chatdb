@@ -60,20 +60,49 @@ def match_keywords(
     return matched
 
 
+def _locate(flat: str, keywords: list[str]) -> int:
+    """flat 에서 키워드가 가장 먼저 나오는 위치(없으면 -1). match_keywords 와 같은 기준으로 찾는다.
+
+    정규화하면 글자 수가 달라질 수 있어서, 정규화한 글자마다 원문 위치를 함께 들고 다닌다.
+    """
+    chars: list[str] = []
+    origins: list[int] = []
+    for index, char in enumerate(flat):
+        for piece in normalize(char):
+            chars.append(piece)
+            origins.append(index)
+    norm_text = "".join(chars)
+    solid = [
+        (piece, origin) for piece, origin in zip(chars, origins, strict=True) if not piece.isspace()
+    ]
+    squashed_text = "".join(piece for piece, _ in solid)
+
+    position = -1
+    for kw in keywords:
+        norm_kw = normalize(kw).strip()
+        if not norm_kw:
+            continue
+        idx = norm_text.find(norm_kw)
+        if idx != -1:
+            found = origins[idx]
+        else:
+            # 띄어쓰기가 다른 채로 걸린 경우
+            idx = squashed_text.find(_squash(norm_kw))
+            if idx == -1:
+                continue
+            found = solid[idx][1]
+        if position == -1 or found < position:
+            position = found
+    return position
+
+
 def make_excerpt(text: str, matched: list[str], max_length: int = EXCERPT_LENGTH) -> str:
     """걸린 키워드 주변을 잘라 한 줄 발췌를 만든다. 잘린 쪽에는 … 를 붙인다."""
     flat = " ".join(text.split())
     if len(flat) <= max_length:
         return flat
 
-    lowered = flat.casefold()
-    position = -1
-    for kw in matched:
-        idx = lowered.find(" ".join(kw.split()).casefold())
-        if idx != -1 and (position == -1 or idx < position):
-            position = idx
-    if position == -1:
-        position = 0
+    position = max(0, _locate(flat, matched))
 
     start = max(0, position - max_length // 3)
     end = min(len(flat), start + max_length)
