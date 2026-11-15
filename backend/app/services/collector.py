@@ -11,8 +11,20 @@ from collections import OrderedDict
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
+from typing import Any, cast
 
-from sqlalchemy import case, delete, func, insert, literal, or_, select, update
+from sqlalchemy import (
+    CursorResult,
+    UpdateBase,
+    case,
+    delete,
+    func,
+    insert,
+    literal,
+    or_,
+    select,
+    update,
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from ..db import Database, UTCDateTime, utcnow
@@ -64,6 +76,12 @@ def _floor_hour(value: datetime) -> datetime:
 
 def _clip(value: str | None, length: int) -> str | None:
     return value[:length] if value else None
+
+
+async def _run_dml(session: AsyncSession, statement: UpdateBase) -> int:
+    """INSERT·UPDATE·DELETE 문을 실행하고 바뀐 행 수를 돌려준다."""
+    result = await session.execute(statement, execution_options={"synchronize_session": False})
+    return cast("CursorResult[Any]", result).rowcount
 
 
 # ---------------------------------------------------------------------------
@@ -615,7 +633,8 @@ class Collector:
                 if group_id not in groups:
                     continue
                 seen_at = counter.last_message_at
-                await session.execute(
+                await _run_dml(
+                    session,
                     update(Group)
                     .where(Group.id == group_id)
                     .values(
@@ -630,28 +649,28 @@ class Collector:
                             ),
                             else_=Group.last_message_at,
                         ),
-                    )
-                    .execution_options(synchronize_session=False)
+                    ),
                 )
 
             for (group_id, tg_user_id, hour), count in activity.items():
                 if group_id not in groups:
                     continue
-                updated = await session.execute(
+                updated = await _run_dml(
+                    session,
                     update(ActivityBucket)
                     .where(
                         ActivityBucket.group_id == group_id,
                         ActivityBucket.tg_user_id == tg_user_id,
                         ActivityBucket.hour == hour,
                     )
-                    .values(count=ActivityBucket.count + count)
-                    .execution_options(synchronize_session=False)
+                    .values(count=ActivityBucket.count + count),
                 )
-                if updated.rowcount == 0:
-                    await session.execute(
+                if updated == 0:
+                    await _run_dml(
+                        session,
                         insert(ActivityBucket).values(
                             group_id=group_id, tg_user_id=tg_user_id, hour=hour, count=count
-                        )
+                        ),
                     )
             await session.commit()
         return groups
@@ -756,28 +775,27 @@ class Collector:
             settings = await self._settings.get()
             removed_hits = 0
             async with self._db.session() as session:
-                await session.execute(
-                    delete(ActivityBucket)
-                    .where(ActivityBucket.hour < now - BUCKET_RETENTION)
-                    .execution_options(synchronize_session=False)
+                await _run_dml(
+                    session,
+                    delete(ActivityBucket).where(ActivityBucket.hour < now - BUCKET_RETENTION),
                 )
                 if settings.retention_days > 0:
-                    deleted = await session.execute(
-                        delete(Hit)
-                        .where(Hit.created_at < now - timedelta(days=settings.retention_days))
-                        .execution_options(synchronize_session=False)
+                    removed_hits = await _run_dml(
+                        session,
+                        delete(Hit).where(
+                            Hit.created_at < now - timedelta(days=settings.retention_days)
+                        ),
                     )
-                    removed_hits = deleted.rowcount
                     if removed_hits:
                         # 지워진 감지를 가리키던 포인터만 비운다(유저는 그대로 둔다).
-                        await session.execute(
+                        await _run_dml(
+                            session,
                             update(Lead)
                             .where(
                                 Lead.last_hit_id.is_not(None),
                                 Lead.last_hit_id.not_in(select(Hit.id)),
                             )
-                            .values(last_hit_id=None)
-                            .execution_options(synchronize_session=False)
+                            .values(last_hit_id=None),
                         )
                 await session.commit()
         except Exception:

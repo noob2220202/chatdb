@@ -384,7 +384,15 @@ async def test_one_message_can_hit_several_rules(env: Env) -> None:
         TgUser(id=504, username="SpamMer"),
         TgUser(id=505, username="excluded_user"),
     ],
-    ids=["anonymous", "no-username", "empty-username", "bot", "own-account", "blocklist", "excluded"],
+    ids=[
+        "anonymous",
+        "no-username",
+        "empty-username",
+        "bot",
+        "own-account",
+        "blocklist",
+        "excluded",
+    ],
 )
 async def test_ignored_senders_are_counted_but_never_collected(
     env: Env, sender: TgUser | None

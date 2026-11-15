@@ -11,6 +11,7 @@ from .models import LinkKind
 _HOSTS = {"t.me", "telegram.me", "telegram.dog"}
 _USERNAME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{3,31}$")
 _HASH_RE = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
+_SCHEME_RE = re.compile(r"^[A-Za-z][A-Za-z0-9+.-]*://")
 # t.me/<이것> 은 그룹이 아니라 기능 경로다.
 _RESERVED = {
     "joinchat", "addstickers", "addemoji", "addtheme", "addlist", "share", "proxy", "socks",
@@ -99,7 +100,7 @@ def parse_link(raw: str) -> LinkTarget:
         # 아이디만 적은 경우
         return _public(text)
 
-    if "://" not in text:
+    if not _SCHEME_RE.match(text):
         text = "https://" + text
     parts = _split(text)
     host = (parts.hostname or "").lower()
