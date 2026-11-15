@@ -70,7 +70,7 @@ FLOOD_WAIT_MINUTES = 14
 
 _POPULATION = 6_600
 """수집된 유저를 뽑을 사람 수. 아이디 없는 사람과 봇을 빼고도 TOTAL_LEADS 를 넉넉히 넘는다."""
-_POOL_LEAD_SHARE = 0.72
+_POOL_LEAD_SHARE = 0.8
 """지금 그룹에서 말하는 사람들 가운데 이미 수집돼 있는 비율. 나머지는 켜 두면 새로 수집된다."""
 _CROSS_RULE_SHARE = 0.05
 """한 유저의 뒤이은 감지가 처음과 다른 규칙에 걸리는 비율."""
