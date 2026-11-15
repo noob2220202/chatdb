@@ -45,7 +45,7 @@ async def event_stream(
     """
     async with bus.subscribe() as queue:
         yield READY_FRAME
-        while True:
+        while not await should_stop():
             try:
                 event = await asyncio.wait_for(queue.get(), timeout=ping_interval)
             except TimeoutError:
