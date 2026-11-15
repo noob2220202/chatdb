@@ -1,0 +1,123 @@
+/* 화면들이 같이 쓰는 배치. 색·크기는 토큰만 쓴다. */
+
+.page {
+  padding-bottom: var(--s-16);
+}
+
+.rule {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.ruleName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.quiet {
+  color: var(--ink-3);
+}
+
+/* 밑줄 링크: 먹색 글자에 먹색 밑줄 */
+.link {
+  color: var(--ink);
+  font-weight: 600;
+  border-bottom: 1px solid var(--ink);
+  line-height: 1.3;
+}
+
+.link:hover {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+/* 표 위의 걸러 보기 줄 */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-6);
+  padding: var(--s-3) 0;
+  border-top: var(--bar);
+}
+
+.filters > .grow {
+  flex: 1 1 260px;
+  min-width: 200px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.handle {
+  font-family: var(--mono);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+.sub {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.rowActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-2);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  padding: var(--s-3) 0 0;
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dialogFoot {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--s-2);
+}
+
+.formError {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+}

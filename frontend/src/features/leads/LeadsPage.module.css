@@ -1,0 +1,110 @@
+.tabsRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-6);
+  flex-wrap: wrap;
+}
+
+.user {
+  min-width: 0;
+}
+
+.content {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.preview {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--on-ink-2);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 320px;
+}
+
+.asideStats {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+/* 자세히 보기 */
+.detailHandle {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  font: 500 22px/1.2 var(--mono);
+  letter-spacing: -0.02em;
+}
+
+.block {
+  padding: var(--s-4) 0;
+  border-top: var(--hair);
+}
+
+.block h3 {
+  font: 700 var(--text-sm) / 1.4 var(--sans);
+  margin-bottom: var(--s-2);
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: 6px var(--s-3);
+  font-size: var(--text-sm);
+}
+
+.meta dt {
+  color: var(--ink-3);
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 112px 1fr;
+  gap: 2px var(--s-3);
+  padding: var(--s-3) 0;
+  border-bottom: var(--hair);
+  font-size: var(--text-sm);
+}
+
+.timeline li:last-child {
+  border-bottom: 0;
+}
+
+.timeline time {
+  font-family: var(--mono);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+  grid-row: span 2;
+}
+
+.timeline .where {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  align-items: center;
+  color: var(--ink-2);
+}
+
+.saved {
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.danger {
+  display: flex;
+  gap: var(--s-2);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+  .preview {
+    display: none;
+  }
+}

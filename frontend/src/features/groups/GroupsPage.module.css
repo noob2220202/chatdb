@@ -1,0 +1,41 @@
+.queueNote {
+  padding-bottom: var(--s-3);
+}
+
+.title {
+  font-weight: 600;
+}
+
+.results {
+  max-height: 340px;
+  overflow: auto;
+  border-top: var(--line);
+}
+
+.results li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 2px var(--s-3);
+  padding: 9px 0;
+  border-bottom: var(--hair);
+  font-size: var(--text-sm);
+}
+
+.results .input {
+  font-family: var(--mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.results .why {
+  grid-column: 1 / -1;
+  color: var(--ink-3);
+  font-size: var(--text-xs);
+}
+
+.summary {
+  font: 600 var(--text-lg) / 1.5 var(--serif);
+  letter-spacing: -0.02em;
+  padding-bottom: var(--s-3);
+}
