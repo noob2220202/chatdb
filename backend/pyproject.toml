@@ -1,0 +1,40 @@
+[project]
+name = "chatdb"
+version = "0.1.0"
+description = "ChatDB — 텔레그램 그룹에서 키워드·활동 기반으로 @아이디를 수집하는 1인용 콘솔"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "sqlalchemy[asyncio]>=2.0.30",
+  "aiosqlite>=0.20",
+  "pydantic>=2.7",
+  "pydantic-settings>=2.3",
+  "telethon>=1.36",
+  "argon2-cffi>=23.1",
+  "itsdangerous>=2.2",
+  "cryptography>=42",
+  "python-multipart>=0.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-asyncio>=0.23", "httpx>=0.27", "ruff>=0.5"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
+ignore = ["E501", "B008"]
