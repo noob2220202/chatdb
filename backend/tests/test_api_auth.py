@@ -297,7 +297,19 @@ async def test_login_lock_is_written_to_the_logbook(authed, other, ctx, clock):
         logs = (await session.execute(select(EventLog))).scalars().all()
     assert len(logs) == 1
     assert logs[0].level == LogLevel.WARNING
-    assert "127.0.0.1" in logs[0].message
+    assert (
+        logs[0].message == "비밀번호를 5번 틀려서 127.0.0.1 에서 오는 로그인을 15분 동안 막았어요."
+    )
+
+
+async def test_login_burst_is_logged_once(app, authed, ctx, clock):
+    async with new_client(app, "10.0.0.9") as attacker:
+        await asyncio.gather(*(login(attacker, f"guess {i}") for i in range(12)))
+
+    async with ctx.db.session() as session:
+        logs = (await session.execute(select(EventLog))).scalars().all()
+    assert [log.level for log in logs] == [LogLevel.WARNING]
+    assert "10.0.0.9" in logs[0].message
 
 
 # --- 로그아웃 -----------------------------------------------------------------
@@ -345,7 +357,11 @@ async def test_password_change_requires_login(client, authed, other):
     res = await change_password(other)
 
     assert res.status_code == 401
-    assert res.json() == {"detail": "로그인이 필요해요.", "code": "unauthorized", "retry_after": None}
+    assert res.json() == {
+        "detail": "로그인이 필요해요.",
+        "code": "unauthorized",
+        "retry_after": None,
+    }
 
 
 async def test_password_change_success(authed, other, ctx):

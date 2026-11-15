@@ -123,6 +123,15 @@ def _full_reason(account: Account, limit: int) -> str:
     return f"{account_display_name(account)} 계정에 남은 자리가 없어요. (계정당 최대 {limit}개)"
 
 
+def _no_room_reason(chosen: Account | None, accounts: Iterable[Account], limit: int) -> str:
+    """새 그룹을 넣을 자리가 없는 까닭. chosen 은 사용자가 직접 고른 계정."""
+    if chosen is not None:
+        return _full_reason(chosen, limit)
+    if any(_is_eligible(account) for account in accounts):
+        return f"모든 계정이 꽉 찼어요. (계정당 최대 {limit}개)"
+    return "그룹을 넣을 수 있는 계정이 없어요. 계정을 연결하거나 켜 주세요."
+
+
 def _held_reason(holder: _Holder, accounts: dict[int, Account]) -> str:
     account = accounts.get(holder.account_id)
     name = account_display_name(account) if account else f"계정 {holder.account_id}"
@@ -200,7 +209,7 @@ async def join_groups(
                 continue
             key = target.dedupe_key
             if key in seen:
-                lines.append(_JoinLine(raw, "duplicate", "같은 링크를 위에서 이미 넣었어요."))
+                lines.append(_JoinLine(raw, "duplicate", "위에 같은 링크가 있어요."))
                 continue
             seen.add(key)
             holder = holders.get(key)
@@ -210,14 +219,10 @@ async def join_groups(
 
             if chosen is not None:
                 account = chosen if used.get(chosen.id, 0) < limit else None
-                reason = _full_reason(chosen, limit)
             else:
                 account = _pick_account(accounts.values(), used, limit)
-                if any(_is_eligible(a) for a in accounts.values()):
-                    reason = f"모든 계정이 꽉 찼어요. (계정당 최대 {limit}개)"
-                else:
-                    reason = "그룹을 넣을 수 있는 계정이 없어요. 계정을 연결하거나 켜 주세요."
             if account is None:
+                reason = _no_room_reason(chosen, accounts.values(), limit)
                 lines.append(_JoinLine(raw, "no_capacity", reason))
                 continue
 

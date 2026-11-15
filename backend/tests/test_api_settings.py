@@ -23,7 +23,11 @@ async def stored_settings(ctx) -> dict[str, str]:
 
 @pytest.mark.parametrize(
     ("method", "path"),
-    [("GET", "/api/settings"), ("PATCH", "/api/settings"), ("DELETE", "/api/settings/telegram-api")],
+    [
+        ("GET", "/api/settings"),
+        ("PATCH", "/api/settings"),
+        ("DELETE", "/api/settings/telegram-api"),
+    ],
 )
 async def test_requires_login(client, engine, method, path):
     res = await client.request(method, path, json={"retention_days": 7})
@@ -135,9 +139,12 @@ async def test_patch_trims_pasted_api_hash(authed, ctx):
 
 
 async def test_patch_rejects_api_hash_that_is_mostly_spaces(authed, ctx, engine):
-    res = await authed.patch("/api/settings", json={"tg_api_id": 123456, "tg_api_hash": "  abc     "})
+    res = await authed.patch(
+        "/api/settings", json={"tg_api_id": 123456, "tg_api_hash": "  abc     "}
+    )
 
-    assert res.status_code == 400
+    assert res.status_code == 422
+    assert res.json()["code"] == "validation"
     assert res.json()["detail"] == "api_hash 값이 너무 짧아요."
     assert await stored_settings(ctx) == {}
     assert engine.called("notify_settings_changed") == []
@@ -179,8 +186,12 @@ async def test_patch_one_credential_when_a_pair_is_stored(
 async def test_patch_unknown_timezone(authed, ctx, engine, timezone):
     res = await authed.patch("/api/settings", json={"timezone": timezone, "retention_days": 5})
 
-    assert res.status_code == 400
-    assert res.json()["detail"] == "알 수 없는 시간대예요."
+    assert res.status_code == 422
+    assert res.json() == {
+        "detail": "알 수 없는 시간대예요.",
+        "code": "validation",
+        "retry_after": None,
+    }
     assert await stored_settings(ctx) == {}
     assert engine.called("notify_settings_changed") == []
 

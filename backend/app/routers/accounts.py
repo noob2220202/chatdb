@@ -16,7 +16,7 @@ from starlette.types import Message as AsgiMessage
 from ..db import utcnow
 from ..deps import Ctx, DbSession, Settings, require_admin
 from ..errors import ApiError, bad_request, conflict, not_found
-from ..models import Account, Group, GroupStatus, LinkKind, LogCategory
+from ..models import Account, Group, GroupKind, GroupStatus, LinkKind, LogCategory
 from ..schemas import (
     AccountOut,
     AccountUpdate,
@@ -47,6 +47,9 @@ _LABEL_MAX_LENGTH = 64
 
 _GONE_STATUSES = (GroupStatus.FAILED, GroupStatus.LEFT)
 """감시 목록에서 빠진 것으로 치는 상태. 같은 그룹을 다시 불러오면 이 행을 되살린다."""
+_TITLE_MAX_LENGTH = 255
+_CHANNEL_DETAIL = "방송 채널이라 유저 채팅은 수집되지 않아요"
+"""엔진이 링크로 채널에 가입했을 때 남기는 설명과 같은 문장."""
 
 _IMPORT_FILE_OPENAPI: dict[str, Any] = {
     "requestBody": {
@@ -169,14 +172,16 @@ async def _active_chat_ids(session: AsyncSession, account_id: int) -> set[int]:
 
 
 def _mark_joined(group: Group, chat: TgChat, now: datetime) -> None:
+    """불러온 그룹을 '가입됨'으로 채운다. 엔진이 링크로 가입을 마쳤을 때와 같은 모양이다."""
     group.tg_chat_id = chat.id
-    group.title = chat.title
+    group.title = chat.title[:_TITLE_MAX_LENGTH] or group.title
     group.kind = chat.kind
-    group.member_count = chat.member_count
+    if chat.member_count is not None:
+        group.member_count = chat.member_count
     if chat.username:
         group.public_username = chat.username
     group.status = GroupStatus.JOINED
-    group.status_detail = None
+    group.status_detail = _CHANNEL_DETAIL if chat.kind == GroupKind.CHANNEL else None
     group.error_code = None
     group.attempts = 0
     group.next_attempt_at = None

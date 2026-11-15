@@ -7,7 +7,7 @@ from fastapi import APIRouter, Depends
 from .. import __version__
 from ..context import AppContext
 from ..deps import Ctx, Settings, require_admin
-from ..errors import bad_request
+from ..errors import ApiError, bad_request
 from ..schemas import SettingsOut, SettingsUpdate
 from ..settings_store import RuntimeSettings
 
@@ -15,6 +15,11 @@ router = APIRouter(prefix="/settings", tags=["settings"], dependencies=[Depends(
 
 _API_FIELDS = ("tg_api_id", "tg_api_hash")
 _API_HASH_MIN_LENGTH = 8
+
+
+def _invalid(detail: str) -> ApiError:
+    """형식 검증(422)과 같은 모양의 오류. 스키마만으로는 걸러지지 않는 값에 쓴다."""
+    return ApiError(422, detail, code="validation")
 
 
 def _settings_out(ctx: AppContext, current: RuntimeSettings) -> SettingsOut:
@@ -45,7 +50,7 @@ async def update_settings(body: SettingsUpdate, ctx: Ctx, settings: Settings) ->
             changes[field] = changes[field].strip()
     api_hash = changes.get("tg_api_hash")
     if api_hash is not None and len(api_hash) < _API_HASH_MIN_LENGTH:
-        raise bad_request("api_hash 값이 너무 짧아요.", code="validation")
+        raise _invalid("api_hash 값이 너무 짧아요.")
     # 한쪽만 저장하면 쓸 수 없는 키가 남는다. 저장된 쌍이 없을 때는 둘을 같이 받아야 한다.
     sent = [field for field in _API_FIELDS if field in changes]
     if len(sent) == 1 and settings.tg_api_source != "settings":
@@ -55,7 +60,8 @@ async def update_settings(body: SettingsUpdate, ctx: Ctx, settings: Settings) ->
     try:
         updated = await ctx.settings.update(**changes)
     except ValueError as exc:
-        raise bad_request(str(exc), code="validation") from exc
+        # 저장소가 값을 거절한 경우(알 수 없는 시간대). 메시지는 화면에 보여 줄 문장이다.
+        raise _invalid(str(exc)) from exc
     ctx.engine.notify_settings_changed()
     return _settings_out(ctx, updated)
 

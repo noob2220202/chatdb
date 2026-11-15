@@ -1,0 +1,2161 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "ChatDB",
+  "version": "0.1.0"
+ },
+ "paths": {
+  "/api/auth/status": {
+   "get": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Auth Status",
+    "operationId": "auth_status_api_auth_status_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AuthStatus"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/setup": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Setup",
+    "operationId": "setup_api_auth_setup_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SetupRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AuthStatus"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/login": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Login",
+    "operationId": "login_api_auth_login_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AuthStatus"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/logout": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Logout",
+    "operationId": "logout_api_auth_logout_post",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/auth/password": {
+   "post": {
+    "tags": [
+     "auth"
+    ],
+    "summary": "Change Password",
+    "operationId": "change_password_api_auth_password_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/PasswordChangeRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts": {
+   "get": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "List Accounts",
+    "operationId": "list_accounts_api_accounts_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/AccountOut"
+         },
+         "type": "array",
+         "title": "Response List Accounts Api Accounts Get"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/login/start": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Login Start",
+    "operationId": "login_start_api_accounts_login_start_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginStartRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LoginStartResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/login/code": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Login Code",
+    "operationId": "login_code_api_accounts_login_code_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginCodeRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LoginStepResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/login/password": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Login Password",
+    "operationId": "login_password_api_accounts_login_password_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LoginPasswordRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LoginStepResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/login/{login_id}": {
+   "delete": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Login Cancel",
+    "operationId": "login_cancel_api_accounts_login__login_id__delete",
+    "parameters": [
+     {
+      "name": "login_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "string",
+       "title": "Login Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/import": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Import Session",
+    "operationId": "import_session_api_accounts_import_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SessionImportRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/import-file": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Import Session File",
+    "operationId": "import_session_file_api_accounts_import_file_post",
+    "requestBody": {
+     "content": {
+      "multipart/form-data": {
+       "schema": {
+        "properties": {
+         "file": {
+          "type": "string",
+          "format": "binary"
+         },
+         "label": {
+          "type": "string",
+          "maxLength": 64
+         }
+        },
+        "type": "object",
+        "required": [
+         "file"
+        ]
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/{account_id}": {
+   "patch": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Update Account",
+    "operationId": "update_account_api_accounts__account_id__patch",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Account Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/AccountUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Remove Account",
+    "operationId": "remove_account_api_accounts__account_id__delete",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Account Id"
+      }
+     },
+     {
+      "name": "log_out",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Log Out"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/{account_id}/reconnect": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Reconnect Account",
+    "operationId": "reconnect_account_api_accounts__account_id__reconnect_post",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Account Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/AccountOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/{account_id}/dialogs": {
+   "get": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "List Dialogs",
+    "operationId": "list_dialogs_api_accounts__account_id__dialogs_get",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Account Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/DialogOut"
+         },
+         "title": "Response List Dialogs Api Accounts  Account Id  Dialogs Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/accounts/{account_id}/dialogs/import": {
+   "post": {
+    "tags": [
+     "accounts"
+    ],
+    "summary": "Import Dialogs",
+    "description": "고른 그룹을 감시 목록에 넣고, 새로 넣었거나 되살린 그룹을 돌려준다.",
+    "operationId": "import_dialogs_api_accounts__account_id__dialogs_import_post",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Account Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/DialogImportRequest"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/GroupOut"
+         },
+         "title": "Response Import Dialogs Api Accounts  Account Id  Dialogs Import Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/groups": {
+   "get": {
+    "tags": [
+     "groups"
+    ],
+    "summary": "List Groups",
+    "operationId": "list_groups_api_groups_get",
+    "parameters": [
+     {
+      "name": "account_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "maximum": 9223372036854775807,
+         "minimum": -9223372036854775807
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Account Id"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/GroupStatus"
+         }
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 200
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/GroupOut"
+         },
+         "title": "Response List Groups Api Groups Get"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/groups/join": {
+   "post": {
+    "tags": [
+     "groups"
+    ],
+    "summary": "Join Groups",
+    "operationId": "join_groups_api_groups_join_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupJoinRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GroupJoinResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/groups/{group_id}": {
+   "patch": {
+    "tags": [
+     "groups"
+    ],
+    "summary": "Update Group",
+    "operationId": "update_group_api_groups__group_id__patch",
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Group Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/GroupUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GroupOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "groups"
+    ],
+    "summary": "Delete Group",
+    "operationId": "delete_group_api_groups__group_id__delete",
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Group Id"
+      }
+     },
+     {
+      "name": "leave",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "boolean",
+       "default": false,
+       "title": "Leave"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/groups/{group_id}/retry": {
+   "post": {
+    "tags": [
+     "groups"
+    ],
+    "summary": "Retry Group",
+    "operationId": "retry_group_api_groups__group_id__retry_post",
+    "parameters": [
+     {
+      "name": "group_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Group Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/GroupOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/settings": {
+   "get": {
+    "tags": [
+     "settings"
+    ],
+    "summary": "Read Settings",
+    "operationId": "read_settings_api_settings_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SettingsOut"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "settings"
+    ],
+    "summary": "Update Settings",
+    "operationId": "update_settings_api_settings_patch",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/SettingsUpdate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SettingsOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/settings/telegram-api": {
+   "delete": {
+    "tags": [
+     "settings"
+    ],
+    "summary": "Delete Telegram Api",
+    "description": "콘솔에 저장한 API 키를 지운다. 환경 변수에 키가 있으면 그 값으로 돌아간다.",
+    "operationId": "delete_telegram_api_api_settings_telegram_api_delete",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/SettingsOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/stream": {
+   "get": {
+    "tags": [
+     "stream"
+    ],
+    "summary": "Stream",
+    "operationId": "stream_api_stream_get",
+    "responses": {
+     "200": {
+      "description": "SSE 스트림. ready 이벤트 뒤에 hit·account·group·log 이벤트가 온다.",
+      "content": {
+       "text/event-stream": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "components": {
+  "schemas": {
+   "AccountOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "label": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Label"
+     },
+     "display_name": {
+      "type": "string",
+      "title": "Display Name"
+     },
+     "phone_masked": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Phone Masked"
+     },
+     "tg_user_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tg User Id"
+     },
+     "first_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "First Name"
+     },
+     "last_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Name"
+     },
+     "username": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Username"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled"
+     },
+     "status": {
+      "$ref": "#/components/schemas/AccountStatus"
+     },
+     "status_detail": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Status Detail"
+     },
+     "flood_until": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Flood Until"
+     },
+     "last_connected_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Connected At"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "joined_count": {
+      "type": "integer",
+      "title": "Joined Count"
+     },
+     "pending_count": {
+      "type": "integer",
+      "title": "Pending Count"
+     },
+     "max_groups": {
+      "type": "integer",
+      "title": "Max Groups"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "label",
+     "display_name",
+     "phone_masked",
+     "tg_user_id",
+     "first_name",
+     "last_name",
+     "username",
+     "enabled",
+     "status",
+     "status_detail",
+     "flood_until",
+     "last_connected_at",
+     "created_at",
+     "joined_count",
+     "pending_count",
+     "max_groups"
+    ],
+    "title": "AccountOut"
+   },
+   "AccountStatus": {
+    "type": "string",
+    "enum": [
+     "connecting",
+     "active",
+     "flood_wait",
+     "reauth_required",
+     "banned",
+     "error",
+     "offline"
+    ],
+    "title": "AccountStatus"
+   },
+   "AccountUpdate": {
+    "properties": {
+     "label": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Label"
+     },
+     "enabled": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enabled"
+     }
+    },
+    "type": "object",
+    "title": "AccountUpdate"
+   },
+   "AuthStatus": {
+    "properties": {
+     "setup_required": {
+      "type": "boolean",
+      "title": "Setup Required"
+     },
+     "authenticated": {
+      "type": "boolean",
+      "title": "Authenticated"
+     },
+     "demo": {
+      "type": "boolean",
+      "title": "Demo"
+     }
+    },
+    "type": "object",
+    "required": [
+     "setup_required",
+     "authenticated",
+     "demo"
+    ],
+    "title": "AuthStatus"
+   },
+   "DialogImportRequest": {
+    "properties": {
+     "tg_chat_ids": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "maxItems": 500,
+      "minItems": 1,
+      "title": "Tg Chat Ids"
+     }
+    },
+    "type": "object",
+    "required": [
+     "tg_chat_ids"
+    ],
+    "title": "DialogImportRequest"
+   },
+   "DialogOut": {
+    "properties": {
+     "tg_chat_id": {
+      "type": "integer",
+      "title": "Tg Chat Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "username": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Username"
+     },
+     "kind": {
+      "$ref": "#/components/schemas/GroupKind"
+     },
+     "member_count": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Member Count"
+     },
+     "already_added": {
+      "type": "boolean",
+      "title": "Already Added"
+     }
+    },
+    "type": "object",
+    "required": [
+     "tg_chat_id",
+     "title",
+     "username",
+     "kind",
+     "member_count",
+     "already_added"
+    ],
+    "title": "DialogOut",
+    "description": "계정이 이미 들어가 있는 그룹."
+   },
+   "GroupJoinItem": {
+    "properties": {
+     "input": {
+      "type": "string",
+      "title": "Input"
+     },
+     "outcome": {
+      "type": "string",
+      "enum": [
+       "queued",
+       "duplicate",
+       "invalid",
+       "no_capacity"
+      ],
+      "title": "Outcome"
+     },
+     "reason": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Reason"
+     },
+     "group": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/GroupOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "input",
+     "outcome"
+    ],
+    "title": "GroupJoinItem"
+   },
+   "GroupJoinRequest": {
+    "properties": {
+     "links": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 200,
+      "minItems": 1,
+      "title": "Links"
+     },
+     "account_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Account Id"
+     }
+    },
+    "type": "object",
+    "required": [
+     "links"
+    ],
+    "title": "GroupJoinRequest"
+   },
+   "GroupJoinResponse": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/GroupJoinItem"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "queued": {
+      "type": "integer",
+      "title": "Queued"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "queued"
+    ],
+    "title": "GroupJoinResponse"
+   },
+   "GroupKind": {
+    "type": "string",
+    "enum": [
+     "group",
+     "supergroup",
+     "channel"
+    ],
+    "title": "GroupKind"
+   },
+   "GroupOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "account_id": {
+      "type": "integer",
+      "title": "Account Id"
+     },
+     "account_name": {
+      "type": "string",
+      "title": "Account Name"
+     },
+     "source_link": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Source Link"
+     },
+     "link_kind": {
+      "$ref": "#/components/schemas/LinkKind"
+     },
+     "public_username": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Public Username"
+     },
+     "tg_chat_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tg Chat Id"
+     },
+     "title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Title"
+     },
+     "display_title": {
+      "type": "string",
+      "title": "Display Title"
+     },
+     "kind": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/GroupKind"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "member_count": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Member Count"
+     },
+     "status": {
+      "$ref": "#/components/schemas/GroupStatus"
+     },
+     "status_detail": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Status Detail"
+     },
+     "error_code": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Error Code"
+     },
+     "attempts": {
+      "type": "integer",
+      "title": "Attempts"
+     },
+     "next_attempt_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Next Attempt At"
+     },
+     "monitoring": {
+      "type": "boolean",
+      "title": "Monitoring"
+     },
+     "messages_seen": {
+      "type": "integer",
+      "title": "Messages Seen"
+     },
+     "last_message_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Message At"
+     },
+     "joined_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Joined At"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "lead_count": {
+      "type": "integer",
+      "title": "Lead Count"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "account_id",
+     "account_name",
+     "source_link",
+     "link_kind",
+     "public_username",
+     "tg_chat_id",
+     "title",
+     "display_title",
+     "kind",
+     "member_count",
+     "status",
+     "status_detail",
+     "error_code",
+     "attempts",
+     "next_attempt_at",
+     "monitoring",
+     "messages_seen",
+     "last_message_at",
+     "joined_at",
+     "created_at",
+     "lead_count"
+    ],
+    "title": "GroupOut"
+   },
+   "GroupStatus": {
+    "type": "string",
+    "enum": [
+     "queued",
+     "joining",
+     "requested",
+     "joined",
+     "failed",
+     "left"
+    ],
+    "title": "GroupStatus"
+   },
+   "GroupUpdate": {
+    "properties": {
+     "monitoring": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Monitoring"
+     }
+    },
+    "type": "object",
+    "title": "GroupUpdate"
+   },
+   "HTTPValidationError": {
+    "properties": {
+     "detail": {
+      "items": {
+       "$ref": "#/components/schemas/ValidationError"
+      },
+      "type": "array",
+      "title": "Detail"
+     }
+    },
+    "type": "object",
+    "title": "HTTPValidationError"
+   },
+   "LinkKind": {
+    "type": "string",
+    "enum": [
+     "public",
+     "invite",
+     "existing"
+    ],
+    "title": "LinkKind"
+   },
+   "LoginCodeRequest": {
+    "properties": {
+     "login_id": {
+      "type": "string",
+      "title": "Login Id"
+     },
+     "code": {
+      "type": "string",
+      "maxLength": 12,
+      "minLength": 3,
+      "title": "Code"
+     }
+    },
+    "type": "object",
+    "required": [
+     "login_id",
+     "code"
+    ],
+    "title": "LoginCodeRequest"
+   },
+   "LoginPasswordRequest": {
+    "properties": {
+     "login_id": {
+      "type": "string",
+      "title": "Login Id"
+     },
+     "password": {
+      "type": "string",
+      "maxLength": 256,
+      "minLength": 1,
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "login_id",
+     "password"
+    ],
+    "title": "LoginPasswordRequest"
+   },
+   "LoginRequest": {
+    "properties": {
+     "password": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "password"
+    ],
+    "title": "LoginRequest"
+   },
+   "LoginStartRequest": {
+    "properties": {
+     "phone": {
+      "type": "string",
+      "maxLength": 32,
+      "minLength": 5,
+      "title": "Phone"
+     }
+    },
+    "type": "object",
+    "required": [
+     "phone"
+    ],
+    "title": "LoginStartRequest"
+   },
+   "LoginStartResponse": {
+    "properties": {
+     "login_id": {
+      "type": "string",
+      "title": "Login Id"
+     },
+     "phone": {
+      "type": "string",
+      "title": "Phone"
+     },
+     "code_via": {
+      "type": "string",
+      "enum": [
+       "app",
+       "sms",
+       "call",
+       "other"
+      ],
+      "title": "Code Via"
+     },
+     "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Expires At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "login_id",
+     "phone",
+     "code_via",
+     "expires_at"
+    ],
+    "title": "LoginStartResponse"
+   },
+   "LoginStepResponse": {
+    "properties": {
+     "status": {
+      "type": "string",
+      "enum": [
+       "done",
+       "password_required"
+      ],
+      "title": "Status"
+     },
+     "account": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/AccountOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "password_hint": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Password Hint"
+     }
+    },
+    "type": "object",
+    "required": [
+     "status"
+    ],
+    "title": "LoginStepResponse"
+   },
+   "Message": {
+    "properties": {
+     "ok": {
+      "type": "boolean",
+      "title": "Ok",
+      "default": true
+     }
+    },
+    "type": "object",
+    "title": "Message",
+    "description": "단순 확인 응답."
+   },
+   "PasswordChangeRequest": {
+    "properties": {
+     "current_password": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Current Password"
+     },
+     "new_password": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 8,
+      "title": "New Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "current_password",
+     "new_password"
+    ],
+    "title": "PasswordChangeRequest"
+   },
+   "SessionImportRequest": {
+    "properties": {
+     "session_string": {
+      "type": "string",
+      "maxLength": 4000,
+      "minLength": 20,
+      "title": "Session String"
+     },
+     "label": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Label"
+     }
+    },
+    "type": "object",
+    "required": [
+     "session_string"
+    ],
+    "title": "SessionImportRequest"
+   },
+   "SettingsOut": {
+    "properties": {
+     "tg_api_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tg Api Id"
+     },
+     "tg_api_hash_set": {
+      "type": "boolean",
+      "title": "Tg Api Hash Set"
+     },
+     "tg_api_source": {
+      "type": "string",
+      "enum": [
+       "settings",
+       "env",
+       "none"
+      ],
+      "title": "Tg Api Source"
+     },
+     "max_groups_per_account": {
+      "type": "integer",
+      "title": "Max Groups Per Account"
+     },
+     "join_interval_seconds": {
+      "type": "integer",
+      "title": "Join Interval Seconds"
+     },
+     "retention_days": {
+      "type": "integer",
+      "title": "Retention Days"
+     },
+     "store_excerpts": {
+      "type": "boolean",
+      "title": "Store Excerpts"
+     },
+     "timezone": {
+      "type": "string",
+      "title": "Timezone"
+     },
+     "demo": {
+      "type": "boolean",
+      "title": "Demo"
+     },
+     "version": {
+      "type": "string",
+      "title": "Version"
+     }
+    },
+    "type": "object",
+    "required": [
+     "tg_api_id",
+     "tg_api_hash_set",
+     "tg_api_source",
+     "max_groups_per_account",
+     "join_interval_seconds",
+     "retention_days",
+     "store_excerpts",
+     "timezone",
+     "demo",
+     "version"
+    ],
+    "title": "SettingsOut"
+   },
+   "SettingsUpdate": {
+    "properties": {
+     "tg_api_id": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tg Api Id"
+     },
+     "tg_api_hash": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64,
+        "minLength": 8
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Tg Api Hash"
+     },
+     "max_groups_per_account": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 500.0,
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Max Groups Per Account"
+     },
+     "join_interval_seconds": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 3600.0,
+        "minimum": 30.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Join Interval Seconds"
+     },
+     "retention_days": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 3650.0,
+        "minimum": 0.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Retention Days"
+     },
+     "store_excerpts": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Store Excerpts"
+     },
+     "timezone": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 64
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Timezone"
+     }
+    },
+    "type": "object",
+    "title": "SettingsUpdate"
+   },
+   "SetupRequest": {
+    "properties": {
+     "password": {
+      "type": "string",
+      "maxLength": 200,
+      "minLength": 8,
+      "title": "Password"
+     }
+    },
+    "type": "object",
+    "required": [
+     "password"
+    ],
+    "title": "SetupRequest"
+   },
+   "ValidationError": {
+    "properties": {
+     "loc": {
+      "items": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "integer"
+        }
+       ]
+      },
+      "type": "array",
+      "title": "Location"
+     },
+     "msg": {
+      "type": "string",
+      "title": "Message"
+     },
+     "type": {
+      "type": "string",
+      "title": "Error Type"
+     },
+     "input": {
+      "title": "Input"
+     },
+     "ctx": {
+      "type": "object",
+      "title": "Context"
+     }
+    },
+    "type": "object",
+    "required": [
+     "loc",
+     "msg",
+     "type"
+    ],
+    "title": "ValidationError"
+   }
+  }
+ }
+}

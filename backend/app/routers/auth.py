@@ -70,11 +70,15 @@ async def _check_password(ctx: AppContext, key: str, admin: Admin, password: str
     """
     _ensure_not_locked(ctx, key)
     ctx.throttle.record_failure(key)
+    is_last_chance = ctx.throttle.retry_after(key) > 0
     if await asyncio.to_thread(verify_password, admin.password_hash, password):
         ctx.throttle.reset(key)
         return True
-    if ctx.throttle.retry_after(key):
-        await ctx.logbook.warning(f"비밀번호를 여러 번 틀려서 {key} 에서의 로그인을 잠시 막았어요.")
+    if is_last_chance:
+        await ctx.logbook.warning(
+            f"비밀번호를 {ctx.throttle.limit}번 틀려서 {key} 에서 오는 로그인을 "
+            f"{_wait_text(ctx.throttle.window)} 동안 막았어요."
+        )
     return False
 
 
