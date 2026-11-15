@@ -1,6 +1,5 @@
 import { ArrowRightIcon } from '@phosphor-icons/react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { animate } from 'motion/mini'
 import { useEffect, useRef, useState, type FormEvent } from 'react'
 
 import { api, ApiError, errorMessage, unwrap } from '@/api/client'
@@ -58,8 +57,7 @@ export default function LoginPage() {
       if (error instanceof ApiError && error.status === 401) {
         setFailure({ message: error.message, kind: 'wrong' })
         if (fieldRef.current && !prefersReducedMotion()) {
-          animate(
-            fieldRef.current,
+          fieldRef.current.animate(
             {
               transform: [
                 'translateX(0)',
@@ -70,7 +68,7 @@ export default function LoginPage() {
                 'translateX(0)',
               ],
             },
-            { duration: 0.34, ease: 'easeOut' },
+            { duration: 360, easing: 'ease-out' },
           )
         }
         inputRef.current?.focus()
