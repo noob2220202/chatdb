@@ -1,0 +1,33 @@
+/* 사진 + 캡션 */
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+  /* 내려받는 동안: 조용한 면 */
+  background: var(--paper-3);
+}
+
+.cropped {
+  object-fit: cover;
+}
+
+.caption {
+  margin-top: 11px;
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+.caption b {
+  font-weight: 600;
+  color: var(--ink-2);
+}

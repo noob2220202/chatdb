@@ -984,6 +984,1025 @@
     }
    }
   },
+  "/api/rules": {
+   "get": {
+    "tags": [
+     "rules"
+    ],
+    "summary": "List Rules",
+    "operationId": "list_rules_api_rules_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/RuleOut"
+         },
+         "type": "array",
+         "title": "Response List Rules Api Rules Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "rules"
+    ],
+    "summary": "Create Rule",
+    "operationId": "create_rule_api_rules_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleCreate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "201": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/rules/{rule_id}": {
+   "patch": {
+    "tags": [
+     "rules"
+    ],
+    "summary": "Update Rule",
+    "operationId": "update_rule_api_rules__rule_id__patch",
+    "parameters": [
+     {
+      "name": "rule_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Rule Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/RuleUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/RuleOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "rules"
+    ],
+    "summary": "Delete Rule",
+    "operationId": "delete_rule_api_rules__rule_id__delete",
+    "parameters": [
+     {
+      "name": "rule_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Rule Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/leads": {
+   "get": {
+    "tags": [
+     "leads"
+    ],
+    "summary": "List Leads",
+    "operationId": "list_leads_api_leads_get",
+    "parameters": [
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 1000000,
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "page_size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Page Size"
+      }
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 200
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/LeadStatus"
+         }
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "name": "rule_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "maximum": 9223372036854775807,
+         "minimum": -9223372036854775807
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Rule Id"
+      }
+     },
+     {
+      "name": "group_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "maximum": 9223372036854775807,
+         "minimum": -9223372036854775807
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Group Id"
+      }
+     },
+     {
+      "name": "kind",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/RuleKind"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Kind"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 40
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다.",
+       "title": "Since"
+      },
+      "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다."
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 40
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다.",
+       "title": "Until"
+      },
+      "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다."
+     },
+     {
+      "name": "sort",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "last_seen",
+        "first_seen",
+        "hit_count",
+        "username"
+       ],
+       "type": "string",
+       "default": "last_seen",
+       "title": "Sort"
+      }
+     },
+     {
+      "name": "order",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "asc",
+        "desc"
+       ],
+       "type": "string",
+       "default": "desc",
+       "title": "Order"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LeadListResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/leads/export": {
+   "get": {
+    "tags": [
+     "leads"
+    ],
+    "summary": "Export Leads",
+    "operationId": "export_leads_api_leads_export_get",
+    "parameters": [
+     {
+      "name": "format",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "csv",
+        "txt"
+       ],
+       "type": "string",
+       "default": "csv",
+       "title": "Format"
+      }
+     },
+     {
+      "name": "ids",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "쉼표로 이은 유저 id. 주면 다른 필터는 보지 않는다.",
+       "title": "Ids"
+      },
+      "description": "쉼표로 이은 유저 id. 주면 다른 필터는 보지 않는다."
+     },
+     {
+      "name": "q",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 200
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Q"
+      }
+     },
+     {
+      "name": "status",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "array",
+         "items": {
+          "$ref": "#/components/schemas/LeadStatus"
+         }
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Status"
+      }
+     },
+     {
+      "name": "rule_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "maximum": 9223372036854775807,
+         "minimum": -9223372036854775807
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Rule Id"
+      }
+     },
+     {
+      "name": "group_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "maximum": 9223372036854775807,
+         "minimum": -9223372036854775807
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Group Id"
+      }
+     },
+     {
+      "name": "kind",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/RuleKind"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Kind"
+      }
+     },
+     {
+      "name": "since",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 40
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다.",
+       "title": "Since"
+      },
+      "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다."
+     },
+     {
+      "name": "until",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "string",
+         "maxLength": 40
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다.",
+       "title": "Until"
+      },
+      "description": "마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다."
+     },
+     {
+      "name": "sort",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "last_seen",
+        "first_seen",
+        "hit_count",
+        "username"
+       ],
+       "type": "string",
+       "default": "last_seen",
+       "title": "Sort"
+      }
+     },
+     {
+      "name": "order",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "enum": [
+        "asc",
+        "desc"
+       ],
+       "type": "string",
+       "default": "desc",
+       "title": "Order"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "수집함을 파일로 내려받는다.",
+      "content": {
+       "text/csv": {
+        "schema": {
+         "type": "string"
+        }
+       },
+       "text/plain": {
+        "schema": {
+         "type": "string"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/leads/{lead_id}": {
+   "get": {
+    "tags": [
+     "leads"
+    ],
+    "summary": "Read Lead",
+    "operationId": "read_lead_api_leads__lead_id__get",
+    "parameters": [
+     {
+      "name": "lead_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Lead Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LeadDetail"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "patch": {
+    "tags": [
+     "leads"
+    ],
+    "summary": "Update Lead",
+    "operationId": "update_lead_api_leads__lead_id__patch",
+    "parameters": [
+     {
+      "name": "lead_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Lead Id"
+      }
+     }
+    ],
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LeadUpdate"
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LeadOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "leads"
+    ],
+    "summary": "Delete Lead",
+    "operationId": "delete_lead_api_leads__lead_id__delete",
+    "parameters": [
+     {
+      "name": "lead_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Lead Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/leads/bulk": {
+   "post": {
+    "tags": [
+     "leads"
+    ],
+    "summary": "Bulk Leads",
+    "description": "고른 유저들을 한꺼번에 처리한다. affected 는 실제로 있던 유저 수다.",
+    "operationId": "bulk_leads_api_leads_bulk_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/LeadBulkRequest"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/BulkResult"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/blocklist": {
+   "get": {
+    "tags": [
+     "blocklist"
+    ],
+    "summary": "List Blocklist",
+    "operationId": "list_blocklist_api_blocklist_get",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/BlocklistOut"
+         },
+         "type": "array",
+         "title": "Response List Blocklist Api Blocklist Get"
+        }
+       }
+      }
+     }
+    }
+   },
+   "post": {
+    "tags": [
+     "blocklist"
+    ],
+    "summary": "Add To Blocklist",
+    "description": "새로 들어간 항목만 돌려준다. 이미 있던 아이디는 건너뛴다.",
+    "operationId": "add_to_blocklist_api_blocklist_post",
+    "requestBody": {
+     "content": {
+      "application/json": {
+       "schema": {
+        "$ref": "#/components/schemas/BlocklistCreate"
+       }
+      }
+     },
+     "required": true
+    },
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "items": {
+          "$ref": "#/components/schemas/BlocklistOut"
+         },
+         "type": "array",
+         "title": "Response Add To Blocklist Api Blocklist Post"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/blocklist/{entry_id}": {
+   "delete": {
+    "tags": [
+     "blocklist"
+    ],
+    "summary": "Remove From Blocklist",
+    "description": "목록에서만 뺀다. 이미 제외 상태가 된 유저는 그대로 둔다(수집함에서 따로 되돌린다).",
+    "operationId": "remove_from_blocklist_api_blocklist__entry_id__delete",
+    "parameters": [
+     {
+      "name": "entry_id",
+      "in": "path",
+      "required": true,
+      "schema": {
+       "type": "integer",
+       "maximum": 9223372036854775807,
+       "minimum": -9223372036854775807,
+       "title": "Entry Id"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/logs": {
+   "get": {
+    "tags": [
+     "logs"
+    ],
+    "summary": "List Logs",
+    "operationId": "list_logs_api_logs_get",
+    "parameters": [
+     {
+      "name": "level",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/LogLevel"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Level"
+      }
+     },
+     {
+      "name": "category",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "$ref": "#/components/schemas/LogCategory"
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Category"
+      }
+     },
+     {
+      "name": "account_id",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "anyOf": [
+        {
+         "type": "integer",
+         "maximum": 9223372036854775807,
+         "minimum": -9223372036854775807
+        },
+        {
+         "type": "null"
+        }
+       ],
+       "title": "Account Id"
+      }
+     },
+     {
+      "name": "page",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 1000000,
+       "minimum": 1,
+       "default": 1,
+       "title": "Page"
+      }
+     },
+     {
+      "name": "page_size",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "maximum": 200,
+       "minimum": 1,
+       "default": 50,
+       "title": "Page Size"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/LogListResponse"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
+        }
+       }
+      }
+     }
+    }
+   },
+   "delete": {
+    "tags": [
+     "logs"
+    ],
+    "summary": "Clear Logs",
+    "operationId": "clear_logs_api_logs_delete",
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/Message"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
   "/api/settings": {
    "get": {
     "tags": [
@@ -1059,6 +2078,49 @@
        "application/json": {
         "schema": {
          "$ref": "#/components/schemas/SettingsOut"
+        }
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/overview": {
+   "get": {
+    "tags": [
+     "overview"
+    ],
+    "summary": "Read Overview",
+    "operationId": "read_overview_api_overview_get",
+    "parameters": [
+     {
+      "name": "days",
+      "in": "query",
+      "required": false,
+      "schema": {
+       "type": "integer",
+       "default": 7,
+       "title": "Days"
+      }
+     }
+    ],
+    "responses": {
+     "200": {
+      "description": "Successful Response",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/OverviewOut"
+        }
+       }
+      }
+     },
+     "422": {
+      "description": "Validation Error",
+      "content": {
+       "application/json": {
+        "schema": {
+         "$ref": "#/components/schemas/HTTPValidationError"
         }
        }
       }
@@ -1313,6 +2375,108 @@
     ],
     "title": "AuthStatus"
    },
+   "BlocklistCreate": {
+    "properties": {
+     "usernames": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 1000,
+      "minItems": 1,
+      "title": "Usernames"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 200
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "type": "object",
+    "required": [
+     "usernames"
+    ],
+    "title": "BlocklistCreate"
+   },
+   "BlocklistOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "username": {
+      "type": "string",
+      "title": "Username"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "username",
+     "note",
+     "created_at"
+    ],
+    "title": "BlocklistOut"
+   },
+   "BulkResult": {
+    "properties": {
+     "affected": {
+      "type": "integer",
+      "title": "Affected"
+     }
+    },
+    "type": "object",
+    "required": [
+     "affected"
+    ],
+    "title": "BulkResult"
+   },
+   "DayPoint": {
+    "properties": {
+     "date": {
+      "type": "string",
+      "title": "Date"
+     },
+     "keyword": {
+      "type": "integer",
+      "title": "Keyword"
+     },
+     "activity": {
+      "type": "integer",
+      "title": "Activity"
+     }
+    },
+    "type": "object",
+    "required": [
+     "date",
+     "keyword",
+     "activity"
+    ],
+    "title": "DayPoint"
+   },
    "DialogImportRequest": {
     "properties": {
      "tg_chat_ids": {
@@ -1382,6 +2546,135 @@
     ],
     "title": "DialogOut",
     "description": "계정이 이미 들어가 있는 그룹."
+   },
+   "FeedItem": {
+    "properties": {
+     "hit_id": {
+      "type": "integer",
+      "title": "Hit Id"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "kind": {
+      "$ref": "#/components/schemas/RuleKind"
+     },
+     "rule_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rule Id"
+     },
+     "rule_name": {
+      "type": "string",
+      "title": "Rule Name"
+     },
+     "group_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Id"
+     },
+     "group_title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Title"
+     },
+     "keywords": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Keywords"
+     },
+     "excerpt": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Excerpt"
+     },
+     "message_count": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Message Count"
+     },
+     "window_hours": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Window Hours"
+     },
+     "lead_id": {
+      "type": "integer",
+      "title": "Lead Id"
+     },
+     "username": {
+      "type": "string",
+      "title": "Username"
+     },
+     "display_name": {
+      "type": "string",
+      "title": "Display Name"
+     },
+     "is_new_lead": {
+      "type": "boolean",
+      "title": "Is New Lead"
+     }
+    },
+    "type": "object",
+    "required": [
+     "hit_id",
+     "created_at",
+     "kind",
+     "rule_id",
+     "rule_name",
+     "group_id",
+     "group_title",
+     "keywords",
+     "excerpt",
+     "message_count",
+     "window_hours",
+     "lead_id",
+     "username",
+     "display_name",
+     "is_new_lead"
+    ],
+    "title": "FeedItem",
+    "description": "실시간 감지 한 줄."
    },
    "GroupJoinItem": {
     "properties": {
@@ -1725,6 +3018,437 @@
     "type": "object",
     "title": "HTTPValidationError"
    },
+   "HitOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "kind": {
+      "$ref": "#/components/schemas/RuleKind"
+     },
+     "rule_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Rule Id"
+     },
+     "rule_name": {
+      "type": "string",
+      "title": "Rule Name"
+     },
+     "group_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Id"
+     },
+     "group_title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Title"
+     },
+     "keywords": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Keywords"
+     },
+     "excerpt": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Excerpt"
+     },
+     "message_count": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Message Count"
+     },
+     "window_hours": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Window Hours"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "kind",
+     "rule_id",
+     "rule_name",
+     "group_id",
+     "group_title",
+     "keywords",
+     "excerpt",
+     "message_count",
+     "window_hours",
+     "created_at"
+    ],
+    "title": "HitOut"
+   },
+   "LeadBulkRequest": {
+    "properties": {
+     "ids": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "maxItems": 5000,
+      "minItems": 1,
+      "title": "Ids"
+     },
+     "action": {
+      "type": "string",
+      "enum": [
+       "set_status",
+       "delete",
+       "block"
+      ],
+      "title": "Action"
+     },
+     "status": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/LeadStatus"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "ids",
+     "action"
+    ],
+    "title": "LeadBulkRequest"
+   },
+   "LeadDetail": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "tg_user_id": {
+      "type": "integer",
+      "title": "Tg User Id"
+     },
+     "username": {
+      "type": "string",
+      "title": "Username"
+     },
+     "first_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "First Name"
+     },
+     "last_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Name"
+     },
+     "display_name": {
+      "type": "string",
+      "title": "Display Name"
+     },
+     "status": {
+      "$ref": "#/components/schemas/LeadStatus"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "hit_count": {
+      "type": "integer",
+      "title": "Hit Count"
+     },
+     "first_seen_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "First Seen At"
+     },
+     "last_seen_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Last Seen At"
+     },
+     "last_hit": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/HitOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "hits": {
+      "items": {
+       "$ref": "#/components/schemas/HitOut"
+      },
+      "type": "array",
+      "title": "Hits"
+     },
+     "group_titles": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Group Titles"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "tg_user_id",
+     "username",
+     "first_name",
+     "last_name",
+     "display_name",
+     "status",
+     "note",
+     "hit_count",
+     "first_seen_at",
+     "last_seen_at",
+     "last_hit",
+     "hits",
+     "group_titles"
+    ],
+    "title": "LeadDetail"
+   },
+   "LeadListResponse": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/LeadOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "page_size": {
+      "type": "integer",
+      "title": "Page Size"
+     },
+     "status_counts": {
+      "additionalProperties": {
+       "type": "integer"
+      },
+      "type": "object",
+      "title": "Status Counts"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "page_size",
+     "status_counts"
+    ],
+    "title": "LeadListResponse"
+   },
+   "LeadOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "tg_user_id": {
+      "type": "integer",
+      "title": "Tg User Id"
+     },
+     "username": {
+      "type": "string",
+      "title": "Username"
+     },
+     "first_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "First Name"
+     },
+     "last_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Name"
+     },
+     "display_name": {
+      "type": "string",
+      "title": "Display Name"
+     },
+     "status": {
+      "$ref": "#/components/schemas/LeadStatus"
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     },
+     "hit_count": {
+      "type": "integer",
+      "title": "Hit Count"
+     },
+     "first_seen_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "First Seen At"
+     },
+     "last_seen_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Last Seen At"
+     },
+     "last_hit": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/HitOut"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "tg_user_id",
+     "username",
+     "first_name",
+     "last_name",
+     "display_name",
+     "status",
+     "note",
+     "hit_count",
+     "first_seen_at",
+     "last_seen_at",
+     "last_hit"
+    ],
+    "title": "LeadOut"
+   },
+   "LeadStatus": {
+    "type": "string",
+    "enum": [
+     "new",
+     "reviewed",
+     "contacted",
+     "excluded"
+    ],
+    "title": "LeadStatus"
+   },
+   "LeadUpdate": {
+    "properties": {
+     "status": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/LeadStatus"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "note": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Note"
+     }
+    },
+    "type": "object",
+    "title": "LeadUpdate"
+   },
    "LinkKind": {
     "type": "string",
     "enum": [
@@ -1733,6 +3457,136 @@
      "existing"
     ],
     "title": "LinkKind"
+   },
+   "LogCategory": {
+    "type": "string",
+    "enum": [
+     "account",
+     "group",
+     "collect",
+     "system"
+    ],
+    "title": "LogCategory"
+   },
+   "LogLevel": {
+    "type": "string",
+    "enum": [
+     "info",
+     "warning",
+     "error"
+    ],
+    "title": "LogLevel"
+   },
+   "LogListResponse": {
+    "properties": {
+     "items": {
+      "items": {
+       "$ref": "#/components/schemas/LogOut"
+      },
+      "type": "array",
+      "title": "Items"
+     },
+     "total": {
+      "type": "integer",
+      "title": "Total"
+     },
+     "page": {
+      "type": "integer",
+      "title": "Page"
+     },
+     "page_size": {
+      "type": "integer",
+      "title": "Page Size"
+     }
+    },
+    "type": "object",
+    "required": [
+     "items",
+     "total",
+     "page",
+     "page_size"
+    ],
+    "title": "LogListResponse"
+   },
+   "LogOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "level": {
+      "$ref": "#/components/schemas/LogLevel"
+     },
+     "category": {
+      "$ref": "#/components/schemas/LogCategory"
+     },
+     "message": {
+      "type": "string",
+      "title": "Message"
+     },
+     "account_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Account Id"
+     },
+     "account_name": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Account Name"
+     },
+     "group_id": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Id"
+     },
+     "group_title": {
+      "anyOf": [
+       {
+        "type": "string"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Title"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "level",
+     "category",
+     "message",
+     "account_id",
+     "account_name",
+     "group_id",
+     "group_title",
+     "created_at"
+    ],
+    "title": "LogOut"
    },
    "LoginCodeRequest": {
     "properties": {
@@ -1877,6 +3731,14 @@
     ],
     "title": "LoginStepResponse"
    },
+   "MatchMode": {
+    "type": "string",
+    "enum": [
+     "any",
+     "all"
+    ],
+    "title": "MatchMode"
+   },
    "Message": {
     "properties": {
      "ok": {
@@ -1888,6 +3750,99 @@
     "type": "object",
     "title": "Message",
     "description": "단순 확인 응답."
+   },
+   "OverviewOut": {
+    "properties": {
+     "today_new": {
+      "type": "integer",
+      "title": "Today New"
+     },
+     "yesterday_new": {
+      "type": "integer",
+      "title": "Yesterday New"
+     },
+     "total_leads": {
+      "type": "integer",
+      "title": "Total Leads"
+     },
+     "accounts_connected": {
+      "type": "integer",
+      "title": "Accounts Connected"
+     },
+     "accounts_total": {
+      "type": "integer",
+      "title": "Accounts Total"
+     },
+     "groups_monitoring": {
+      "type": "integer",
+      "title": "Groups Monitoring"
+     },
+     "groups_capacity": {
+      "type": "integer",
+      "title": "Groups Capacity"
+     },
+     "join_requests_pending": {
+      "type": "integer",
+      "title": "Join Requests Pending"
+     },
+     "join_queue": {
+      "type": "integer",
+      "title": "Join Queue"
+     },
+     "series": {
+      "items": {
+       "$ref": "#/components/schemas/DayPoint"
+      },
+      "type": "array",
+      "title": "Series"
+     },
+     "top_groups": {
+      "items": {
+       "$ref": "#/components/schemas/TopGroup"
+      },
+      "type": "array",
+      "title": "Top Groups"
+     },
+     "rule_totals": {
+      "items": {
+       "$ref": "#/components/schemas/RuleTotal"
+      },
+      "type": "array",
+      "title": "Rule Totals"
+     },
+     "accounts": {
+      "items": {
+       "$ref": "#/components/schemas/AccountOut"
+      },
+      "type": "array",
+      "title": "Accounts"
+     },
+     "recent_hits": {
+      "items": {
+       "$ref": "#/components/schemas/FeedItem"
+      },
+      "type": "array",
+      "title": "Recent Hits"
+     }
+    },
+    "type": "object",
+    "required": [
+     "today_new",
+     "yesterday_new",
+     "total_leads",
+     "accounts_connected",
+     "accounts_total",
+     "groups_monitoring",
+     "groups_capacity",
+     "join_requests_pending",
+     "join_queue",
+     "series",
+     "top_groups",
+     "rule_totals",
+     "accounts",
+     "recent_hits"
+    ],
+    "title": "OverviewOut"
    },
    "PasswordChangeRequest": {
     "properties": {
@@ -1910,6 +3865,371 @@
      "new_password"
     ],
     "title": "PasswordChangeRequest"
+   },
+   "RuleCreate": {
+    "properties": {
+     "name": {
+      "type": "string",
+      "maxLength": 80,
+      "minLength": 1,
+      "title": "Name"
+     },
+     "kind": {
+      "$ref": "#/components/schemas/RuleKind"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled",
+      "default": true
+     },
+     "keywords": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 100,
+      "title": "Keywords"
+     },
+     "exclude_keywords": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "maxItems": 100,
+      "title": "Exclude Keywords"
+     },
+     "match_mode": {
+      "$ref": "#/components/schemas/MatchMode",
+      "default": "any"
+     },
+     "min_messages": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 10000.0,
+        "minimum": 2.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Min Messages"
+     },
+     "window_hours": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 720.0,
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Window Hours"
+     },
+     "all_groups": {
+      "type": "boolean",
+      "title": "All Groups",
+      "default": true
+     },
+     "group_ids": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "maxItems": 2000,
+      "title": "Group Ids"
+     }
+    },
+    "type": "object",
+    "required": [
+     "name",
+     "kind"
+    ],
+    "title": "RuleCreate"
+   },
+   "RuleKind": {
+    "type": "string",
+    "enum": [
+     "keyword",
+     "activity"
+    ],
+    "title": "RuleKind"
+   },
+   "RuleOut": {
+    "properties": {
+     "id": {
+      "type": "integer",
+      "title": "Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "kind": {
+      "$ref": "#/components/schemas/RuleKind"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled"
+     },
+     "keywords": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Keywords"
+     },
+     "exclude_keywords": {
+      "items": {
+       "type": "string"
+      },
+      "type": "array",
+      "title": "Exclude Keywords"
+     },
+     "match_mode": {
+      "$ref": "#/components/schemas/MatchMode"
+     },
+     "min_messages": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Min Messages"
+     },
+     "window_hours": {
+      "anyOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Window Hours"
+     },
+     "all_groups": {
+      "type": "boolean",
+      "title": "All Groups"
+     },
+     "group_ids": {
+      "items": {
+       "type": "integer"
+      },
+      "type": "array",
+      "title": "Group Ids"
+     },
+     "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Created At"
+     },
+     "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "title": "Updated At"
+     },
+     "lead_count": {
+      "type": "integer",
+      "title": "Lead Count"
+     },
+     "hit_count": {
+      "type": "integer",
+      "title": "Hit Count"
+     },
+     "last_hit_at": {
+      "anyOf": [
+       {
+        "type": "string",
+        "format": "date-time"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Last Hit At"
+     }
+    },
+    "type": "object",
+    "required": [
+     "id",
+     "name",
+     "kind",
+     "enabled",
+     "keywords",
+     "exclude_keywords",
+     "match_mode",
+     "min_messages",
+     "window_hours",
+     "all_groups",
+     "group_ids",
+     "created_at",
+     "updated_at",
+     "lead_count",
+     "hit_count",
+     "last_hit_at"
+    ],
+    "title": "RuleOut"
+   },
+   "RuleTotal": {
+    "properties": {
+     "rule_id": {
+      "type": "integer",
+      "title": "Rule Id"
+     },
+     "name": {
+      "type": "string",
+      "title": "Name"
+     },
+     "kind": {
+      "$ref": "#/components/schemas/RuleKind"
+     },
+     "enabled": {
+      "type": "boolean",
+      "title": "Enabled"
+     },
+     "leads": {
+      "type": "integer",
+      "title": "Leads"
+     }
+    },
+    "type": "object",
+    "required": [
+     "rule_id",
+     "name",
+     "kind",
+     "enabled",
+     "leads"
+    ],
+    "title": "RuleTotal"
+   },
+   "RuleUpdate": {
+    "properties": {
+     "name": {
+      "anyOf": [
+       {
+        "type": "string",
+        "maxLength": 80,
+        "minLength": 1
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Name"
+     },
+     "enabled": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Enabled"
+     },
+     "keywords": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array",
+        "maxItems": 100
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Keywords"
+     },
+     "exclude_keywords": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "string"
+        },
+        "type": "array",
+        "maxItems": 100
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Exclude Keywords"
+     },
+     "match_mode": {
+      "anyOf": [
+       {
+        "$ref": "#/components/schemas/MatchMode"
+       },
+       {
+        "type": "null"
+       }
+      ]
+     },
+     "min_messages": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 10000.0,
+        "minimum": 2.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Min Messages"
+     },
+     "window_hours": {
+      "anyOf": [
+       {
+        "type": "integer",
+        "maximum": 720.0,
+        "minimum": 1.0
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Window Hours"
+     },
+     "all_groups": {
+      "anyOf": [
+       {
+        "type": "boolean"
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "All Groups"
+     },
+     "group_ids": {
+      "anyOf": [
+       {
+        "items": {
+         "type": "integer"
+        },
+        "type": "array",
+        "maxItems": 2000
+       },
+       {
+        "type": "null"
+       }
+      ],
+      "title": "Group Ids"
+     }
+    },
+    "type": "object",
+    "title": "RuleUpdate",
+    "description": "보낸 필드만 바꾼다. kind 는 바꿀 수 없다."
    },
    "SessionImportRequest": {
     "properties": {
@@ -2115,6 +4435,29 @@
      "password"
     ],
     "title": "SetupRequest"
+   },
+   "TopGroup": {
+    "properties": {
+     "group_id": {
+      "type": "integer",
+      "title": "Group Id"
+     },
+     "title": {
+      "type": "string",
+      "title": "Title"
+     },
+     "leads": {
+      "type": "integer",
+      "title": "Leads"
+     }
+    },
+    "type": "object",
+    "required": [
+     "group_id",
+     "title",
+     "leads"
+    ],
+    "title": "TopGroup"
    },
    "ValidationError": {
     "properties": {

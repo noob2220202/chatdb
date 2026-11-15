@@ -1,0 +1,53 @@
+/* 계정의 그룹 자리: 점 하나가 그룹 한 곳 */
+
+.dots {
+  display: block;
+  flex: none;
+  overflow: visible;
+  --slot-color: var(--ink);
+}
+
+.wait {
+  --slot-color: var(--wait);
+}
+
+.on {
+  fill: var(--slot-color);
+}
+
+.halfRing {
+  fill: none;
+  stroke: var(--slot-color);
+  stroke-width: 1;
+}
+
+/* 빈 자리: 장식에 가까운 옅은 테 */
+.free {
+  fill: none;
+  stroke: var(--ink-4);
+  stroke-width: 1;
+}
+
+/* 연결이 끊긴 계정의 자리: 먹색 테만 남는다 */
+.dead {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.4;
+}
+
+/* ── 눈금 ─────────────────────────────────────────── */
+
+.scale {
+  position: relative;
+  display: block;
+  height: 12px;
+}
+
+.tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font: 400 var(--text-2xs) / 12px var(--mono);
+  letter-spacing: -0.04em;
+  color: var(--ink-3);
+}

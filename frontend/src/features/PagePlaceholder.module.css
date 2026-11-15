@@ -1,0 +1,9 @@
+.head {
+  padding: 24px 0 16px;
+  border-bottom: var(--bar);
+}
+
+.title {
+  font: 700 var(--head-lg) / 1.15 var(--serif);
+  letter-spacing: -0.035em;
+}

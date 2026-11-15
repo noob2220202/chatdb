@@ -1,0 +1,344 @@
+/* 로그인 · 처음 설정 — 시안 login.html 을 옮긴 판짜기.
+ * 왼쪽 단(머리띠, 헤드라인, 입력 칸, 사진 설명) + 오른쪽을 가득 채우는 사진.
+ * 헤드라인 묶음은 사진 속 램프의 높이(--lamp-y)에 맞춰 놓인다.
+ */
+.auth {
+  --col: clamp(400px, 29.65vw, 520px);
+  --title-size: clamp(44px, 3.75vw, 68px);
+  --title-lh: calc(var(--title-size) * 1.2222);
+  --mast-h: 84px;
+
+  position: relative;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 660px;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* 종이 결은 이 화면에만, 아주 옅게 */
+.auth::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.1  0 0 0 0 0.09  0 0 0 0 0.08  0 0 0 0.5 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.045;
+  pointer-events: none;
+}
+
+.col {
+  position: absolute;
+  left: var(--margin);
+  top: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: var(--col);
+}
+
+/* ── 머리띠 ───────────────────────────────────────── */
+.mast {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  height: var(--mast-h);
+  border-bottom: var(--bar);
+}
+
+.mast::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  border-bottom: var(--line);
+}
+
+.mastNote {
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+.mastNote b {
+  display: block;
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+/* ── 헤드라인 ─────────────────────────────────────── */
+.hero {
+  position: absolute;
+  left: 0;
+  right: 0;
+  /* 둘째 줄의 한가운데가 램프 높이에 온다 */
+  top: calc(var(--lamp-y, 42vh) - 1.5 * var(--title-lh));
+}
+
+.title {
+  font: 800 var(--title-size) / var(--title-lh) var(--serif);
+  letter-spacing: -0.035em;
+  white-space: nowrap;
+}
+
+.lede {
+  width: min(24em, 100%);
+  margin-top: 30px;
+  font-size: clamp(var(--text-lg), 1.04vw, var(--head-sm));
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+.lede b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.auth[data-tight] .lede {
+  visibility: hidden;
+}
+
+/* 자리를 재기 전에는 헤드라인과 선을 보이지 않게 둔다(튀어 오르지 않도록) */
+.auth:not([data-ready]) .hero {
+  visibility: hidden;
+}
+
+/* ── 입력 칸 ──────────────────────────────────────── */
+.form {
+  position: relative;
+  margin-top: auto;
+}
+
+/* ── 사진 설명과 판 번호 ──────────────────────────── */
+.foot {
+  display: flex;
+  flex: none;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-5);
+  margin-top: 40px;
+  padding: 11px 0 28px;
+  border-top: var(--hair);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.caption b {
+  display: block;
+  font: 700 var(--text-sm) / 1.5 var(--serif);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.version {
+  flex: none;
+  white-space: nowrap;
+}
+
+/* ── 사진 ─────────────────────────────────────────── */
+.plate {
+  position: absolute;
+  left: calc(var(--margin) + var(--col) + 24px);
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+  background: var(--ink);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.plate img {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: left top;
+}
+
+/* 사진 속 램프: 칠해진 색을 걷어 낸 꺼진 상태 */
+.lampOff {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--on-ink-2);
+  mix-blend-mode: color;
+  pointer-events: none;
+}
+
+/* 켜진 상태: 빨강 하나 */
+.lampOn {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--lamp);
+  opacity: 0;
+  transition: opacity var(--normal) linear;
+  pointer-events: none;
+}
+
+.auth[data-lit] .lampOn {
+  opacity: 1;
+  transition: none;
+  animation: strike 200ms linear 230ms backwards;
+}
+
+/* ── 헤드라인과 램프를 잇는 선 ────────────────────── */
+.tether {
+  position: absolute;
+  left: 0;
+  top: 0;
+  /* 좁은 화면에서 사진(order 로 뒤에 그려짐)보다 위에 오도록 */
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.wirePaper,
+.wirePhoto,
+.ringOff {
+  fill: none;
+  stroke-width: 1;
+}
+
+.wirePaper {
+  stroke: var(--ink);
+}
+
+.wirePhoto,
+.ringOff {
+  stroke: var(--on-ink);
+  opacity: 0.85;
+}
+
+.wireLit {
+  fill: none;
+  stroke: var(--lamp);
+  stroke-width: 1.5;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--normal) var(--ease);
+}
+
+.auth[data-lit] .wireLit {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 240ms cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.ringLit {
+  fill: none;
+  stroke: var(--lamp);
+  stroke-width: 1.5;
+  opacity: 0;
+  transition: opacity var(--normal) linear;
+}
+
+.auth[data-lit] .ringLit {
+  opacity: 1;
+  transition: none;
+  animation: strike 200ms linear 230ms backwards;
+}
+
+/* 필라멘트가 들어오듯 한 번 깜빡이고 켜진다. 번지는 빛은 없다 */
+@keyframes strike {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.45;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ── 창이 낮을 때: 조금씩 조인다 ──────────────────── */
+@media (max-height: 800px) and (min-width: 900px) {
+  .auth {
+    --title-size: clamp(42px, 3.6vw, 50px);
+    --mast-h: 68px;
+  }
+
+  .lede {
+    margin-top: 22px;
+    font-size: var(--text-md);
+  }
+
+  .foot {
+    margin-top: 20px;
+    padding-bottom: 18px;
+  }
+}
+
+/* ── 900 아래: 사진이 위쪽 띠가 되고 나머지가 아래로 쌓인다 ── */
+@media (max-width: 899px) {
+  .auth {
+    --title-size: clamp(34px, 9.4vw, 46px);
+    --mast-h: 60px;
+
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
+  }
+
+  .col {
+    position: static;
+    display: contents;
+  }
+
+  .mast {
+    order: 1;
+    margin: 0 var(--margin);
+  }
+
+  .plate {
+    position: relative;
+    left: auto;
+    order: 2;
+    flex: none;
+    height: clamp(200px, 30vh, 320px);
+    margin-top: 5px;
+  }
+
+  .hero {
+    position: static;
+    order: 3;
+    margin: 28px var(--margin) 0;
+  }
+
+  .lede {
+    width: auto;
+    max-width: 420px;
+    margin-top: 16px;
+  }
+
+  .form {
+    order: 4;
+    margin: 32px var(--margin) 0;
+  }
+
+  .foot {
+    order: 5;
+    margin: auto var(--margin) 0;
+    padding-top: 11px;
+    padding-bottom: 20px;
+  }
+
+  .form + .foot {
+    margin-top: 32px;
+  }
+}

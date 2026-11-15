@@ -1,0 +1,74 @@
+.stepper {
+  display: flex;
+  gap: var(--s-4);
+}
+
+.step {
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--rule-2);
+  font-size: var(--text-sm);
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+.no {
+  font: 500 var(--text-xs) / 1 var(--mono);
+}
+
+.dash {
+  color: var(--ink-4);
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.done {
+  flex: none;
+  align-self: center;
+}
+
+.step[data-state='done'] {
+  border-top-color: var(--ink);
+  color: var(--ink-2);
+}
+
+.step[data-state='current'] {
+  padding-top: 8px;
+  border-top: var(--bar);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.step[data-state='current'] .no {
+  font-weight: 600;
+}
+
+@media (max-width: 560px) {
+  .stepper {
+    gap: var(--s-2);
+  }
+
+  .step[data-state='todo'] .name,
+  .step[data-state='done'] .name {
+    display: none;
+  }
+
+  .step[data-state='todo'],
+  .step[data-state='done'] {
+    flex: none;
+    width: 44px;
+  }
+
+  .step[data-state='todo'] .dash,
+  .step[data-state='done'] .dash {
+    display: none;
+  }
+}

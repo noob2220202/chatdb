@@ -1,0 +1,87 @@
+/* 화면 머리 */
+
+.header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  column-gap: var(--gutter);
+  row-gap: var(--s-4);
+  padding: var(--s-6) 0 var(--s-4);
+}
+
+.main {
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: var(--s-4);
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--head-lg);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: var(--tracking-display);
+  color: var(--ink);
+}
+
+.count {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--head-sm);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  font-variant-numeric: proportional-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.count b,
+.count strong {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.summary {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 6px 0 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.summary b,
+.summary strong {
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.aside {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+@media (max-width: 760px) {
+  .header {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .aside {
+    flex-wrap: wrap;
+  }
+
+  .summary {
+    align-items: baseline;
+  }
+}

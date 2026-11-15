@@ -349,6 +349,174 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/rules": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Rules */
+        get: operations["list_rules_api_rules_get"];
+        put?: never;
+        /** Create Rule */
+        post: operations["create_rule_api_rules_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/rules/{rule_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Rule */
+        delete: operations["delete_rule_api_rules__rule_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Rule */
+        patch: operations["update_rule_api_rules__rule_id__patch"];
+        trace?: never;
+    };
+    "/api/leads": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Leads */
+        get: operations["list_leads_api_leads_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/leads/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Export Leads */
+        get: operations["export_leads_api_leads_export_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/leads/{lead_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Lead */
+        get: operations["read_lead_api_leads__lead_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Lead */
+        delete: operations["delete_lead_api_leads__lead_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Lead */
+        patch: operations["update_lead_api_leads__lead_id__patch"];
+        trace?: never;
+    };
+    "/api/leads/bulk": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Bulk Leads
+         * @description 고른 유저들을 한꺼번에 처리한다. affected 는 실제로 있던 유저 수다.
+         */
+        post: operations["bulk_leads_api_leads_bulk_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/blocklist": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Blocklist */
+        get: operations["list_blocklist_api_blocklist_get"];
+        put?: never;
+        /**
+         * Add To Blocklist
+         * @description 새로 들어간 항목만 돌려준다. 이미 있던 아이디는 건너뛴다.
+         */
+        post: operations["add_to_blocklist_api_blocklist_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/blocklist/{entry_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Remove From Blocklist
+         * @description 목록에서만 뺀다. 이미 제외 상태가 된 유저는 그대로 둔다(수집함에서 따로 되돌린다).
+         */
+        delete: operations["remove_from_blocklist_api_blocklist__entry_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/logs": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Logs */
+        get: operations["list_logs_api_logs_get"];
+        put?: never;
+        post?: never;
+        /** Clear Logs */
+        delete: operations["clear_logs_api_logs_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/settings": {
         parameters: {
             query?: never;
@@ -382,6 +550,23 @@ export interface paths {
          * @description 콘솔에 저장한 API 키를 지운다. 환경 변수에 키가 있으면 그 값으로 돌아간다.
          */
         delete: operations["delete_telegram_api_api_settings_telegram_api_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read Overview */
+        get: operations["read_overview_api_overview_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -468,6 +653,41 @@ export interface components {
             /** Demo */
             demo: boolean;
         };
+        /** BlocklistCreate */
+        BlocklistCreate: {
+            /** Usernames */
+            usernames: string[];
+            /** Note */
+            note?: string | null;
+        };
+        /** BlocklistOut */
+        BlocklistOut: {
+            /** Id */
+            id: number;
+            /** Username */
+            username: string;
+            /** Note */
+            note: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** BulkResult */
+        BulkResult: {
+            /** Affected */
+            affected: number;
+        };
+        /** DayPoint */
+        DayPoint: {
+            /** Date */
+            date: string;
+            /** Keyword */
+            keyword: number;
+            /** Activity */
+            activity: number;
+        };
         /** DialogImportRequest */
         DialogImportRequest: {
             /** Tg Chat Ids */
@@ -489,6 +709,44 @@ export interface components {
             member_count: number | null;
             /** Already Added */
             already_added: boolean;
+        };
+        /**
+         * FeedItem
+         * @description 실시간 감지 한 줄.
+         */
+        FeedItem: {
+            /** Hit Id */
+            hit_id: number;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            kind: components["schemas"]["RuleKind"];
+            /** Rule Id */
+            rule_id: number | null;
+            /** Rule Name */
+            rule_name: string;
+            /** Group Id */
+            group_id: number | null;
+            /** Group Title */
+            group_title: string | null;
+            /** Keywords */
+            keywords: string[];
+            /** Excerpt */
+            excerpt: string | null;
+            /** Message Count */
+            message_count: number | null;
+            /** Window Hours */
+            window_hours: number | null;
+            /** Lead Id */
+            lead_id: number;
+            /** Username */
+            username: string;
+            /** Display Name */
+            display_name: string;
+            /** Is New Lead */
+            is_new_lead: boolean;
         };
         /** GroupJoinItem */
         GroupJoinItem: {
@@ -584,11 +842,184 @@ export interface components {
             /** Detail */
             detail?: components["schemas"]["ValidationError"][];
         };
+        /** HitOut */
+        HitOut: {
+            /** Id */
+            id: number;
+            kind: components["schemas"]["RuleKind"];
+            /** Rule Id */
+            rule_id: number | null;
+            /** Rule Name */
+            rule_name: string;
+            /** Group Id */
+            group_id: number | null;
+            /** Group Title */
+            group_title: string | null;
+            /** Keywords */
+            keywords: string[];
+            /** Excerpt */
+            excerpt: string | null;
+            /** Message Count */
+            message_count: number | null;
+            /** Window Hours */
+            window_hours: number | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
+        /** LeadBulkRequest */
+        LeadBulkRequest: {
+            /** Ids */
+            ids: number[];
+            /**
+             * Action
+             * @enum {string}
+             */
+            action: "set_status" | "delete" | "block";
+            status?: components["schemas"]["LeadStatus"] | null;
+        };
+        /** LeadDetail */
+        LeadDetail: {
+            /** Id */
+            id: number;
+            /** Tg User Id */
+            tg_user_id: number;
+            /** Username */
+            username: string;
+            /** First Name */
+            first_name: string | null;
+            /** Last Name */
+            last_name: string | null;
+            /** Display Name */
+            display_name: string;
+            status: components["schemas"]["LeadStatus"];
+            /** Note */
+            note: string | null;
+            /** Hit Count */
+            hit_count: number;
+            /**
+             * First Seen At
+             * Format: date-time
+             */
+            first_seen_at: string;
+            /**
+             * Last Seen At
+             * Format: date-time
+             */
+            last_seen_at: string;
+            last_hit: components["schemas"]["HitOut"] | null;
+            /** Hits */
+            hits: components["schemas"]["HitOut"][];
+            /** Group Titles */
+            group_titles: string[];
+        };
+        /** LeadListResponse */
+        LeadListResponse: {
+            /** Items */
+            items: components["schemas"]["LeadOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+            /** Status Counts */
+            status_counts: {
+                [key: string]: number;
+            };
+        };
+        /** LeadOut */
+        LeadOut: {
+            /** Id */
+            id: number;
+            /** Tg User Id */
+            tg_user_id: number;
+            /** Username */
+            username: string;
+            /** First Name */
+            first_name: string | null;
+            /** Last Name */
+            last_name: string | null;
+            /** Display Name */
+            display_name: string;
+            status: components["schemas"]["LeadStatus"];
+            /** Note */
+            note: string | null;
+            /** Hit Count */
+            hit_count: number;
+            /**
+             * First Seen At
+             * Format: date-time
+             */
+            first_seen_at: string;
+            /**
+             * Last Seen At
+             * Format: date-time
+             */
+            last_seen_at: string;
+            last_hit: components["schemas"]["HitOut"] | null;
+        };
+        /**
+         * LeadStatus
+         * @enum {string}
+         */
+        LeadStatus: "new" | "reviewed" | "contacted" | "excluded";
+        /** LeadUpdate */
+        LeadUpdate: {
+            status?: components["schemas"]["LeadStatus"] | null;
+            /** Note */
+            note?: string | null;
+        };
         /**
          * LinkKind
          * @enum {string}
          */
         LinkKind: "public" | "invite" | "existing";
+        /**
+         * LogCategory
+         * @enum {string}
+         */
+        LogCategory: "account" | "group" | "collect" | "system";
+        /**
+         * LogLevel
+         * @enum {string}
+         */
+        LogLevel: "info" | "warning" | "error";
+        /** LogListResponse */
+        LogListResponse: {
+            /** Items */
+            items: components["schemas"]["LogOut"][];
+            /** Total */
+            total: number;
+            /** Page */
+            page: number;
+            /** Page Size */
+            page_size: number;
+        };
+        /** LogOut */
+        LogOut: {
+            /** Id */
+            id: number;
+            level: components["schemas"]["LogLevel"];
+            category: components["schemas"]["LogCategory"];
+            /** Message */
+            message: string;
+            /** Account Id */
+            account_id: number | null;
+            /** Account Name */
+            account_name: string | null;
+            /** Group Id */
+            group_id: number | null;
+            /** Group Title */
+            group_title: string | null;
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+        };
         /** LoginCodeRequest */
         LoginCodeRequest: {
             /** Login Id */
@@ -642,6 +1073,11 @@ export interface components {
             password_hint?: string | null;
         };
         /**
+         * MatchMode
+         * @enum {string}
+         */
+        MatchMode: "any" | "all";
+        /**
          * Message
          * @description 단순 확인 응답.
          */
@@ -652,12 +1088,150 @@ export interface components {
              */
             ok: boolean;
         };
+        /** OverviewOut */
+        OverviewOut: {
+            /** Today New */
+            today_new: number;
+            /** Yesterday New */
+            yesterday_new: number;
+            /** Total Leads */
+            total_leads: number;
+            /** Accounts Connected */
+            accounts_connected: number;
+            /** Accounts Total */
+            accounts_total: number;
+            /** Groups Monitoring */
+            groups_monitoring: number;
+            /** Groups Capacity */
+            groups_capacity: number;
+            /** Join Requests Pending */
+            join_requests_pending: number;
+            /** Join Queue */
+            join_queue: number;
+            /** Series */
+            series: components["schemas"]["DayPoint"][];
+            /** Top Groups */
+            top_groups: components["schemas"]["TopGroup"][];
+            /** Rule Totals */
+            rule_totals: components["schemas"]["RuleTotal"][];
+            /** Accounts */
+            accounts: components["schemas"]["AccountOut"][];
+            /** Recent Hits */
+            recent_hits: components["schemas"]["FeedItem"][];
+        };
         /** PasswordChangeRequest */
         PasswordChangeRequest: {
             /** Current Password */
             current_password: string;
             /** New Password */
             new_password: string;
+        };
+        /** RuleCreate */
+        RuleCreate: {
+            /** Name */
+            name: string;
+            kind: components["schemas"]["RuleKind"];
+            /**
+             * Enabled
+             * @default true
+             */
+            enabled: boolean;
+            /** Keywords */
+            keywords?: string[];
+            /** Exclude Keywords */
+            exclude_keywords?: string[];
+            /** @default any */
+            match_mode: components["schemas"]["MatchMode"];
+            /** Min Messages */
+            min_messages?: number | null;
+            /** Window Hours */
+            window_hours?: number | null;
+            /**
+             * All Groups
+             * @default true
+             */
+            all_groups: boolean;
+            /** Group Ids */
+            group_ids?: number[];
+        };
+        /**
+         * RuleKind
+         * @enum {string}
+         */
+        RuleKind: "keyword" | "activity";
+        /** RuleOut */
+        RuleOut: {
+            /** Id */
+            id: number;
+            /** Name */
+            name: string;
+            kind: components["schemas"]["RuleKind"];
+            /** Enabled */
+            enabled: boolean;
+            /** Keywords */
+            keywords: string[];
+            /** Exclude Keywords */
+            exclude_keywords: string[];
+            match_mode: components["schemas"]["MatchMode"];
+            /** Min Messages */
+            min_messages: number | null;
+            /** Window Hours */
+            window_hours: number | null;
+            /** All Groups */
+            all_groups: boolean;
+            /** Group Ids */
+            group_ids: number[];
+            /**
+             * Created At
+             * Format: date-time
+             */
+            created_at: string;
+            /**
+             * Updated At
+             * Format: date-time
+             */
+            updated_at: string;
+            /** Lead Count */
+            lead_count: number;
+            /** Hit Count */
+            hit_count: number;
+            /** Last Hit At */
+            last_hit_at: string | null;
+        };
+        /** RuleTotal */
+        RuleTotal: {
+            /** Rule Id */
+            rule_id: number;
+            /** Name */
+            name: string;
+            kind: components["schemas"]["RuleKind"];
+            /** Enabled */
+            enabled: boolean;
+            /** Leads */
+            leads: number;
+        };
+        /**
+         * RuleUpdate
+         * @description 보낸 필드만 바꾼다. kind 는 바꿀 수 없다.
+         */
+        RuleUpdate: {
+            /** Name */
+            name?: string | null;
+            /** Enabled */
+            enabled?: boolean | null;
+            /** Keywords */
+            keywords?: string[] | null;
+            /** Exclude Keywords */
+            exclude_keywords?: string[] | null;
+            match_mode?: components["schemas"]["MatchMode"] | null;
+            /** Min Messages */
+            min_messages?: number | null;
+            /** Window Hours */
+            window_hours?: number | null;
+            /** All Groups */
+            all_groups?: boolean | null;
+            /** Group Ids */
+            group_ids?: number[] | null;
         };
         /** SessionImportRequest */
         SessionImportRequest: {
@@ -713,6 +1287,15 @@ export interface components {
         SetupRequest: {
             /** Password */
             password: string;
+        };
+        /** TopGroup */
+        TopGroup: {
+            /** Group Id */
+            group_id: number;
+            /** Title */
+            title: string;
+            /** Leads */
+            leads: number;
         };
         /** ValidationError */
         ValidationError: {
@@ -1416,6 +1999,482 @@ export interface operations {
             };
         };
     };
+    list_rules_api_rules_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RuleOut"][];
+                };
+            };
+        };
+    };
+    create_rule_api_rules_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RuleCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RuleOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_rule_api_rules__rule_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                rule_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_rule_api_rules__rule_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                rule_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RuleUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RuleOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_leads_api_leads_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                page_size?: number;
+                q?: string | null;
+                status?: components["schemas"]["LeadStatus"][] | null;
+                rule_id?: number | null;
+                group_id?: number | null;
+                kind?: components["schemas"]["RuleKind"] | null;
+                /** @description 마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다. */
+                since?: string | null;
+                /** @description 마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다. */
+                until?: string | null;
+                sort?: "last_seen" | "first_seen" | "hit_count" | "username";
+                order?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    export_leads_api_leads_export_get: {
+        parameters: {
+            query?: {
+                format?: "csv" | "txt";
+                /** @description 쉼표로 이은 유저 id. 주면 다른 필터는 보지 않는다. */
+                ids?: string | null;
+                q?: string | null;
+                status?: components["schemas"]["LeadStatus"][] | null;
+                rule_id?: number | null;
+                group_id?: number | null;
+                kind?: components["schemas"]["RuleKind"] | null;
+                /** @description 마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다. */
+                since?: string | null;
+                /** @description 마지막 감지 시각 기준. 날짜(YYYY-MM-DD)나 ISO 8601 시각을 받는다. 시간대가 없으면 설정된 시간대로 보고, 날짜만 주면 그날 하루 전체를 포함한다. */
+                until?: string | null;
+                sort?: "last_seen" | "first_seen" | "hit_count" | "username";
+                order?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description 수집함을 파일로 내려받는다. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "text/csv": string;
+                    "text/plain": string;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    read_lead_api_leads__lead_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lead_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_lead_api_leads__lead_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lead_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_lead_api_leads__lead_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                lead_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadUpdate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LeadOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bulk_leads_api_leads_bulk_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LeadBulkRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BulkResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_blocklist_api_blocklist_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlocklistOut"][];
+                };
+            };
+        };
+    };
+    add_to_blocklist_api_blocklist_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BlocklistCreate"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BlocklistOut"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_from_blocklist_api_blocklist__entry_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                entry_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_logs_api_logs_get: {
+        parameters: {
+            query?: {
+                level?: components["schemas"]["LogLevel"] | null;
+                category?: components["schemas"]["LogCategory"] | null;
+                account_id?: number | null;
+                page?: number;
+                page_size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LogListResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    clear_logs_api_logs_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Message"];
+                };
+            };
+        };
+    };
     read_settings_api_settings_get: {
         parameters: {
             query?: never;
@@ -1485,6 +2544,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SettingsOut"];
+                };
+            };
+        };
+    };
+    read_overview_api_overview_get: {
+        parameters: {
+            query?: {
+                days?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["OverviewOut"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

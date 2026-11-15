@@ -1,0 +1,90 @@
+/* 오류 상태. 빨강 없이, 먹색 면의 × 와 평범한 문장으로. */
+
+.error {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: var(--s-4);
+  min-width: 0;
+}
+
+.section {
+  padding: var(--s-6) 0;
+  border-top: var(--line);
+  border-bottom: var(--hair);
+}
+
+.inline {
+  column-gap: var(--s-3);
+  padding: var(--s-3) 0;
+}
+
+.mark {
+  display: block;
+  flex: none;
+  margin-top: 1px;
+}
+
+.mark rect {
+  fill: var(--ink);
+}
+
+.mark path {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 2;
+  stroke-linecap: square;
+}
+
+.inline .mark {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+}
+
+.body {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: var(--head-sm);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: var(--tracking-head);
+  color: var(--ink);
+}
+
+.inline .title {
+  font-family: var(--sans);
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0;
+}
+
+.message {
+  margin: 4px 0 0;
+  max-width: 40em;
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--ink-2);
+}
+
+.inline .message {
+  margin-top: 1px;
+  font-size: var(--text-sm);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+}
+
+.inline .actions {
+  margin-top: var(--s-2);
+}

@@ -51,7 +51,7 @@
   height: var(--control-h-lg);
   padding: 0 20px;
   gap: var(--s-3);
-  font-size: 15px;
+  font-size: var(--text-lg);
 }
 
 .block {

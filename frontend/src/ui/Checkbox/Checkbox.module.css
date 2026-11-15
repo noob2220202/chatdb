@@ -1,0 +1,131 @@
+.wrap {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.wrap[data-disabled] {
+  cursor: not-allowed;
+}
+
+.box {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  width: 15px;
+  height: 15px;
+  border: 1.25px solid var(--ink-2);
+  background: transparent;
+  vertical-align: -2px;
+  transition:
+    background-color var(--fast) var(--ease),
+    border-color var(--fast) var(--ease);
+}
+
+/* 누르는 자리를 눈에 보이는 칸보다 넓힌다 */
+.box::before {
+  content: '';
+  position: absolute;
+  inset: -9px;
+}
+
+.wrap .box {
+  margin-top: 3px;
+}
+
+.glyph {
+  position: absolute;
+  inset: -1.25px;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 1.75;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+}
+
+@media (hover: hover) {
+  .box:hover:not(:disabled),
+  .wrap:hover .box:not(:disabled) {
+    border-color: var(--ink);
+    background: var(--paper-2);
+  }
+}
+
+.box[data-state='checked'],
+.box[data-state='indeterminate'],
+.box[data-state='checked']:hover:not(:disabled),
+.box[data-state='indeterminate']:hover:not(:disabled),
+.wrap:hover .box[data-state='checked']:not(:disabled),
+.wrap:hover .box[data-state='indeterminate']:not(:disabled) {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.box:active:not(:disabled) {
+  background: var(--paper-3);
+}
+
+.box:disabled {
+  border-color: var(--rule-2);
+  background: var(--paper-2);
+}
+
+.box:disabled[data-state='checked'],
+.box:disabled[data-state='indeterminate'] {
+  border-color: var(--ink-4);
+  background: var(--ink-4);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.hint {
+  margin-top: 1px;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.wrap[data-disabled] .label {
+  color: var(--ink-3);
+}
+
+/* 먹색 면 위: 종이색 칸에 먹색 표시 */
+.onInk {
+  border-color: var(--on-ink);
+}
+
+.onInk[data-state='checked'],
+.onInk[data-state='indeterminate'],
+.onInk[data-state='checked']:hover:not(:disabled),
+.onInk[data-state='indeterminate']:hover:not(:disabled) {
+  border-color: var(--on-ink);
+  background: var(--on-ink);
+}
+
+.onInk .glyph {
+  stroke: var(--ink);
+}
+
+.onInk:focus-visible {
+  outline-color: var(--on-ink);
+}
+
+@media (hover: hover) {
+  .onInk:hover:not(:disabled) {
+    border-color: var(--on-ink);
+    background: transparent;
+  }
+}

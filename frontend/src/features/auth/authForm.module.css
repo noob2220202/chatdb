@@ -1,0 +1,65 @@
+/* 로그인 · 처음 설정의 입력 칸. 시안의 치수를 따른다. */
+
+.password {
+  font-size: var(--head-sm);
+  letter-spacing: 0.18em;
+}
+
+.password::placeholder {
+  font-size: var(--text-lg);
+  letter-spacing: 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: var(--gutter);
+  align-items: start;
+}
+
+.submit {
+  height: 56px;
+  margin-top: 20px;
+  padding: 0 20px 0 22px;
+  font-size: var(--text-lg);
+}
+
+.hint {
+  margin-top: 14px;
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.hint a {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-height: 800px) and (min-width: 900px) {
+  .submit {
+    height: 48px;
+    margin-top: 16px;
+  }
+
+  .hint {
+    margin-top: 10px;
+  }
+}
+
+@media (max-width: 899px) {
+  .nowrap {
+    white-space: nowrap;
+  }
+
+  .pair {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s-5);
+  }
+}

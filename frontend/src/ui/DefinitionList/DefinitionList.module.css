@@ -1,0 +1,78 @@
+/* 설정 항목 목록 */
+
+.list {
+  margin: 0;
+  padding: 0;
+  border-top: var(--line);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: var(--dl-term, 200px) minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: var(--gutter);
+  min-height: var(--row);
+  padding: 15px 0 14px;
+  border-bottom: var(--hair);
+}
+
+.term {
+  font-size: var(--text-md);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0;
+  min-width: 0;
+}
+
+.value {
+  font-size: var(--text-md);
+  line-height: 1.5;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.mono {
+  font-family: var(--mono);
+  font-size: var(--text-sm);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.empty {
+  color: var(--ink-3);
+}
+
+.help {
+  font-size: var(--text-xs);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  margin: 0;
+  align-self: center;
+}
+
+@media (max-width: 760px) {
+  .item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 2px;
+  }
+
+  .term {
+    grid-column: 1 / -1;
+    font-size: var(--text-sm);
+    color: var(--ink-2);
+  }
+}

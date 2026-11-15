@@ -1,0 +1,127 @@
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background: var(--scrim);
+  animation: fade var(--normal) var(--ease);
+}
+
+.scrim[data-state='closed'] {
+  animation: fade var(--fast) var(--ease) reverse;
+}
+
+.sheet {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  z-index: var(--z-dialog);
+  display: flex;
+  flex-direction: column;
+  width: min(560px, calc(100vw - 32px));
+  max-height: min(720px, calc(100dvh - 48px));
+  border: var(--line);
+  border-top: var(--bar);
+  background: var(--paper-raised);
+  color: var(--ink);
+  transform: translate(-50%, -50%);
+  animation: rise var(--normal) var(--ease);
+}
+
+.sheet[data-state='closed'] {
+  animation: fade var(--fast) var(--ease) reverse;
+}
+
+.sheet:focus-visible {
+  outline: 0;
+}
+
+.sm {
+  width: min(420px, calc(100vw - 32px));
+}
+
+.lg {
+  width: min(760px, calc(100vw - 32px));
+}
+
+.head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-5) var(--s-6) 0;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  font: 700 var(--head-md) / var(--leading-tight) var(--serif);
+  letter-spacing: var(--tracking-head);
+}
+
+.description {
+  margin-top: var(--s-2);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  color: var(--ink-2);
+}
+
+.close {
+  margin: -2px -8px 0 0;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--s-5) var(--s-6) var(--s-6);
+  font-size: var(--text-md);
+}
+
+.head:last-child {
+  padding-bottom: var(--s-6);
+}
+
+.foot {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-2);
+  margin: 0 var(--s-6);
+  padding: var(--s-4) 0 var(--s-5);
+  border-top: var(--hair);
+}
+
+.head + .foot {
+  margin-top: var(--s-5);
+}
+
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 8px));
+  }
+}
+
+@media (max-width: 560px) {
+  .head {
+    padding: var(--s-4) var(--s-4) 0;
+  }
+
+  .body {
+    padding: var(--s-4);
+  }
+
+  .foot {
+    margin: 0 var(--s-4);
+  }
+}

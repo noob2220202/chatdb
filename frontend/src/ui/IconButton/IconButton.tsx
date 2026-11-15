@@ -5,7 +5,10 @@ import { Tooltip } from '@/ui/Tooltip/Tooltip'
 
 import styles from './IconButton.module.css'
 
-export type IconButtonProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label' | 'children'> & {
+export type IconButtonProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'aria-label' | 'children'
+> & {
   /** 버튼의 이름. 읽어 주는 이름이자 풍선에 뜨는 말이다 */
   label: string
   /** 아이콘 하나 */
@@ -41,7 +44,13 @@ export const IconButton = forwardRef<HTMLButtonElement, IconButtonProps>(functio
       ref={ref}
       type={type ?? 'button'}
       aria-label={label}
-      className={clsx(styles.button, styles[variant], styles[size], onInk && styles.onInk, className)}
+      className={clsx(
+        styles.button,
+        styles[variant],
+        styles[size],
+        onInk && styles.onInk,
+        className,
+      )}
       {...rest}
     >
       {children}

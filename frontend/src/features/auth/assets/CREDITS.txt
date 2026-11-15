@@ -1,0 +1,10 @@
+operator-1941.jpg  (로그인 · 처음 설정 화면)
+  John Vachon, "Telephone operators at Aberdeen proving grounds. Aberdeen, Maryland", 1941.
+  U.S. Farm Security Administration / Office of War Information. LC-USF34-064182-D.
+  미국 의회도서관 소장, 퍼블릭 도메인 (No known restrictions).
+  https://www.loc.gov/item/2017813699/
+  가공: 크롭, 먹·종이 듀오톤, 그레인. 교환원 손끝의 램프 하나에 색을 입혔다
+        (화면에서는 그 램프 위에 꺼짐/켜짐 표시를 겹쳐 그린다 — photo.ts 의 lamp 좌표).
+
+  ※ 임시 파일. 새 종이색에 맞춰 다시 톤을 잡은 최종본이 오면 같은 이름으로 바꿔 넣고,
+     크기나 크롭이 달라졌으면 photo.ts 의 size 와 lamp 를 함께 고친다.

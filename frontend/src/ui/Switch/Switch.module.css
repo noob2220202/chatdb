@@ -1,0 +1,157 @@
+.wrap {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.wrap[data-disabled] {
+  cursor: not-allowed;
+}
+
+/* 홈: 가는 네모. 손잡이가 위아래로 4px씩 더 크다 */
+.lever {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  width: 36px;
+  height: 18px;
+  vertical-align: -4px;
+}
+
+.wrap .lever {
+  margin-top: 2px;
+}
+
+.lever::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 4px;
+  height: 10px;
+  border: 1px solid var(--ink);
+  background: transparent;
+  transition: background-color var(--fast) var(--ease);
+}
+
+.lever[data-state='checked']::before {
+  background: var(--ink);
+}
+
+.knob {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 14px;
+  height: 18px;
+  border: 1px solid var(--ink);
+  background: var(--paper);
+  transition:
+    transform var(--fast) var(--ease),
+    background-color var(--fast) var(--ease);
+}
+
+.knob[data-state='checked'] {
+  background: var(--ink);
+  transform: translateX(22px);
+}
+
+/* 손잡이 가운데의 잡는 금 */
+.knob::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  bottom: 4px;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--ink);
+}
+
+.knob[data-state='checked']::after {
+  background: var(--on-ink);
+}
+
+@media (hover: hover) {
+  .lever:hover:not(:disabled) .knob[data-state='unchecked'],
+  .wrap:hover .lever:not(:disabled) .knob[data-state='unchecked'] {
+    background: var(--paper-3);
+  }
+
+  .lever:hover:not(:disabled) .knob[data-state='checked'],
+  .wrap:hover .lever:not(:disabled) .knob[data-state='checked'] {
+    background: var(--ink-2);
+  }
+}
+
+.lever:active:not(:disabled) .knob[data-state='unchecked'] {
+  transform: translateX(3px);
+}
+
+.lever:active:not(:disabled) .knob[data-state='checked'] {
+  transform: translateX(19px);
+}
+
+.lever:disabled::before {
+  border-color: var(--rule-2);
+}
+
+.lever:disabled[data-state='checked']::before {
+  background: var(--ink-4);
+  border-color: var(--ink-4);
+}
+
+.lever:disabled .knob {
+  border-color: var(--ink-4);
+  background: var(--paper-2);
+}
+
+.lever:disabled .knob::after {
+  background: var(--ink-4);
+}
+
+.lever:disabled .knob[data-state='checked'] {
+  background: var(--ink-4);
+}
+
+.lever:disabled .knob[data-state='checked']::after {
+  background: var(--paper);
+}
+
+.state {
+  flex: none;
+  min-width: 2.6em;
+  padding-top: 1px;
+  font-size: var(--text-xs);
+  line-height: 20px;
+  color: var(--ink-3);
+}
+
+.state[data-on] {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.label {
+  font-size: var(--text-md);
+  line-height: 22px;
+  color: var(--ink);
+}
+
+.hint {
+  margin-top: 1px;
+  font-size: var(--text-xs);
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+
+.wrap[data-disabled] .label {
+  color: var(--ink-3);
+}

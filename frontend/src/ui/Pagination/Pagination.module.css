@@ -1,0 +1,150 @@
+/* 쪽 넘기기 */
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  column-gap: var(--s-6);
+  row-gap: var(--s-1);
+  min-height: 44px;
+  font-size: var(--text-xs);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.range {
+  margin: 0;
+}
+
+.range b {
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  margin-left: auto;
+}
+
+/* ── 한 쪽 크기 ────────────────────────────────────── */
+
+.sizes {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.sizesLabel {
+  margin-right: 6px;
+}
+
+.size {
+  min-width: 30px;
+  height: 26px;
+  padding: 2px 6px 0;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  background: none;
+  font: 400 var(--text-xs) / 1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.size:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.size:active {
+  background: var(--paper-2);
+}
+
+/* 고른 크기: 먹색 밑줄 */
+.size[aria-pressed='true'] {
+  font-weight: 600;
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+  cursor: default;
+}
+
+.size[aria-pressed='true']:hover {
+  text-decoration: none;
+}
+
+.size:focus-visible,
+.step:focus-visible {
+  outline: var(--focus);
+  outline-offset: 1px;
+}
+
+.size:disabled {
+  cursor: not-allowed;
+}
+
+/* ── 이전 / 1 / 97 / 다음 ──────────────────────────── */
+
+.nav {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.step {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 28px;
+  padding: 0 2px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.step:hover {
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.step:active {
+  background: var(--paper-2);
+}
+
+/* 더 넘길 쪽이 없을 때 */
+.step:disabled {
+  font-weight: 400;
+  color: var(--ink-3);
+  text-decoration: none;
+  cursor: not-allowed;
+}
+
+.step:disabled:active {
+  background: none;
+}
+
+.step:disabled svg {
+  opacity: 0.55;
+}
+
+.position {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font: 400 var(--text-xs) / 1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+.slash {
+  color: var(--ink-4);
+}

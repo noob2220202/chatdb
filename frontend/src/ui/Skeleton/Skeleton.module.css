@@ -1,0 +1,61 @@
+/* 불러오는 동안의 자리 표시: 가는 괘선과 조용한 면. 반짝임도 움직임도 없다. */
+
+.block {
+  display: block;
+  flex: none;
+  max-width: 100%;
+  background: var(--paper-2);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 5px 0;
+}
+
+/* ── 표 본문 ───────────────────────────────────────── */
+
+.rows {
+  border-top: var(--hair);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--s-6);
+  padding: 0 var(--s-3) 0 13px;
+  border-bottom: var(--hair);
+}
+
+.roomy .row {
+  height: var(--row);
+}
+
+.compact .row {
+  height: var(--row-compact);
+}
+
+.grow {
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── 차트 ─────────────────────────────────────────── */
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0 0;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.chart span {
+  display: block;
+  border-top: var(--hair);
+}
+
+.chart span:last-child {
+  visibility: hidden;
+}

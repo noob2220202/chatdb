@@ -1,0 +1,30 @@
+.content {
+  z-index: var(--z-menu);
+  max-width: calc(100vw - 16px);
+  max-height: var(--radix-popover-content-available-height);
+  overflow-y: auto;
+  padding: var(--s-4);
+  border: var(--line);
+  border-top: var(--bar);
+  background: var(--paper-raised);
+  font-size: var(--text-sm);
+  color: var(--ink);
+  animation: open var(--fast) var(--ease);
+}
+
+.content:focus-visible {
+  outline: 0;
+}
+
+.title {
+  margin-bottom: var(--s-3);
+  font: 700 var(--text-lg) / var(--leading-tight) var(--serif);
+  letter-spacing: var(--tracking-head);
+}
+
+@keyframes open {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+}

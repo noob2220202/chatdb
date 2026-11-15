@@ -30,7 +30,14 @@ export type TooltipProps = {
 }
 
 /** 작은 먹색 이름표. 아이콘만 있는 버튼의 이름을 알려 준다. */
-export function Tooltip({ label, children, side = 'bottom', align = 'center', shortcut, className }: TooltipProps) {
+export function Tooltip({
+  label,
+  children,
+  side = 'bottom',
+  align = 'center',
+  shortcut,
+  className,
+}: TooltipProps) {
   const hasProvider = useContext(ProviderContext)
   const tooltip = (
     <RadixTooltip.Root>
@@ -50,5 +57,9 @@ export function Tooltip({ label, children, side = 'bottom', align = 'center', sh
     </RadixTooltip.Root>
   )
   // 공급자 없이도(시험, 갤러리) 그대로 쓸 수 있게 한다.
-  return hasProvider ? tooltip : <RadixTooltip.Provider delayDuration={450}>{tooltip}</RadixTooltip.Provider>
+  return hasProvider ? (
+    tooltip
+  ) : (
+    <RadixTooltip.Provider delayDuration={450}>{tooltip}</RadixTooltip.Provider>
+  )
 }

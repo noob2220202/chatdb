@@ -57,22 +57,17 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     onInk && styles.onInk,
     className,
   )
-  const content = (
-    <>
-      {leadingIcon && <span className={styles.icon}>{leadingIcon}</span>}
-      {asChild ? (
-        <Slot.Slottable>{children}</Slot.Slottable>
-      ) : (
-        <span className={styles.label}>{children}</span>
-      )}
-      {trailingIcon && <span className={clsx(styles.icon, styles.trailing)}>{trailingIcon}</span>}
-    </>
-  )
+  const leading = leadingIcon ? <span className={styles.icon}>{leadingIcon}</span> : null
+  const trailing = trailingIcon ? (
+    <span className={clsx(styles.icon, styles.trailing)}>{trailingIcon}</span>
+  ) : null
 
   if (asChild) {
     return (
       <Slot.Root ref={ref} className={classes} {...rest}>
-        {content}
+        {leading}
+        <Slot.Slottable>{children}</Slot.Slottable>
+        {trailing}
       </Slot.Root>
     )
   }
@@ -87,7 +82,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       data-loading={loading || undefined}
       {...rest}
     >
-      {content}
+      {leading}
+      <span className={styles.label}>{children}</span>
+      {trailing}
       {loading && (
         <>
           <LoadingDots className={styles.loader} />

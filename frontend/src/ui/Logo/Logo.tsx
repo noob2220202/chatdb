@@ -31,7 +31,13 @@ export type LogoProps = {
   className?: string
 }
 
-export function Logo({ lit = false, variant = 'full', height = 28, title = 'ChatDB', className }: LogoProps) {
+export function Logo({
+  lit = false,
+  variant = 'full',
+  height = 28,
+  title = 'ChatDB',
+  className,
+}: LogoProps) {
   const width = variant === 'full' ? WORD_WIDTH : MARK_WIDTH
   return (
     <svg

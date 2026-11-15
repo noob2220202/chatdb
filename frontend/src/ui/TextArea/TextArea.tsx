@@ -20,11 +20,30 @@ export type TextAreaProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
 
 /** 여러 줄 입력 칸. 가는 괘선 테 안에 쓰고, 아래 줄만 먹색이다. */
 export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function TextArea(
-  { label, labelAside, hint, error, mono = false, autoGrow = true, className, inputClassName, id, rows = 4, ...rest },
+  {
+    label,
+    labelAside,
+    hint,
+    error,
+    mono = false,
+    autoGrow = true,
+    className,
+    inputClassName,
+    id,
+    rows = 4,
+    ...rest
+  },
   ref,
 ) {
   return (
-    <Field label={label} labelAside={labelAside} hint={hint} error={error} id={id} className={className}>
+    <Field
+      label={label}
+      labelAside={labelAside}
+      hint={hint}
+      error={error}
+      id={id}
+      className={className}
+    >
       {(ids) => (
         <div className={styles.shell} data-disabled={rest.disabled || undefined}>
           <textarea
@@ -33,7 +52,12 @@ export const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(function 
             rows={rows}
             aria-invalid={ids.invalid || undefined}
             aria-describedby={ids.describedBy}
-            className={clsx(styles.input, mono && styles.mono, autoGrow && styles.grow, inputClassName)}
+            className={clsx(
+              styles.input,
+              mono && styles.mono,
+              autoGrow && styles.grow,
+              inputClassName,
+            )}
             {...rest}
           />
         </div>

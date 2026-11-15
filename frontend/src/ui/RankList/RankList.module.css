@@ -1,0 +1,71 @@
+/* 순위 목록 */
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: var(--hair);
+}
+
+.item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: baseline;
+  column-gap: 6px;
+  padding: 10px 0 11px;
+  border-bottom: var(--hair);
+}
+
+/* 비율: 밑 괘선의 앞부분만 먹으로 덧긋는다 */
+.withRule::after {
+  content: '';
+  position: absolute;
+  left: 24px;
+  bottom: -1px;
+  width: calc((100% - 24px) * var(--rank-share, 0));
+  height: 1px;
+  background: var(--ink);
+}
+
+.no {
+  font: 500 var(--text-2xs) / 1 var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
+.name {
+  min-width: 0;
+  font-size: var(--text-md);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.figure {
+  font: 600 var(--text-sm) / 1.2 var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.unit {
+  margin-left: 1px;
+  font: 400 var(--text-2xs) / 1 var(--sans);
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+
+.empty {
+  margin: 0;
+  padding: 14px 0;
+  border-top: var(--hair);
+  border-bottom: var(--hair);
+  font-size: var(--text-sm);
+  line-height: var(--leading-body);
+  color: var(--ink-3);
+}

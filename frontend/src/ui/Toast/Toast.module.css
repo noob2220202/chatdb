@@ -1,0 +1,123 @@
+/* 알림 띠 — 시안의 선택 띠와 같은 문법: 먹색 면, 종이색 글자, 세로 칸막이.
+ * 화면 아래 가장자리에 붙고, 여러 개면 위로 쌓인다. */
+.viewport {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  outline: 0;
+}
+
+.band {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 44px;
+  padding: 0 calc(var(--margin) - 12px) 0 var(--margin);
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-sm);
+  animation: up var(--normal) var(--ease);
+}
+
+.band + .band {
+  border-top: 1px solid color-mix(in srgb, var(--on-ink) 24%, transparent);
+}
+
+.band[data-state='closed'] {
+  animation: out var(--fast) var(--ease) forwards;
+}
+
+.band[data-swipe='move'] {
+  transform: translateY(var(--radix-toast-swipe-move-y));
+}
+
+.band[data-swipe='cancel'] {
+  transform: translateY(0);
+  transition: transform var(--fast) var(--ease);
+}
+
+.band[data-swipe='end'] {
+  animation: out var(--fast) var(--ease) forwards;
+}
+
+.mark {
+  flex: none;
+}
+
+.message {
+  flex: 1;
+  min-width: 0;
+  padding: 11px 0 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.problem .message {
+  font-weight: 600;
+}
+
+.action {
+  flex: none;
+  align-self: stretch;
+  padding: 0 var(--s-4);
+  border-left: 1px solid color-mix(in srgb, var(--on-ink) 24%, transparent);
+  color: var(--on-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  white-space: nowrap;
+}
+
+.close {
+  display: inline-flex;
+  flex: none;
+  align-self: stretch;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  color: var(--on-ink-2);
+}
+
+.action + .close {
+  border-left: 1px solid color-mix(in srgb, var(--on-ink) 24%, transparent);
+}
+
+@media (hover: hover) {
+  .action:hover,
+  .close:hover {
+    background: var(--on-ink);
+    color: var(--ink);
+  }
+}
+
+.action:active,
+.close:active {
+  background: var(--on-ink-2);
+  color: var(--ink);
+}
+
+.action:focus-visible,
+.close:focus-visible {
+  outline-color: var(--on-ink);
+  outline-offset: -4px;
+}
+
+@keyframes up {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+@keyframes out {
+  to {
+    opacity: 0;
+  }
+}

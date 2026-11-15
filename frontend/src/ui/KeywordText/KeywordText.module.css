@@ -1,0 +1,124 @@
+/* 걸린 키워드: 굵게 + 글자마다 빨간 방점(글자 위에 켜진 램프).
+ *
+ * 방점은 text-emphasis 로는 크기와 높이를 맞출 수 없어서 글자마다 직접 찍는다.
+ * 글자 하나하나를 "한 덩어리 상자"(inline-block)로 두고, 방점은 그 상자 안에서 흐르는 조각으로 넣는다.
+ *   · 줄임표(…)에 가려지는 글자는 방점과 밑칠까지 통째로 사라진다.
+ *   · 방점의 높이는 글자 크기에만 맞춰지고, 늘 제 줄의 높이 안에 머문다
+ *     (윗줄의 글자와 부딪히지 않고, 줄 수를 줄였을 때 가려진 줄의 방점이 비어져 나오지 않는다). */
+
+.root {
+  --kw-dot: 0.22em; /* 방점 지름 */
+  --kw-gap: 0.05em; /* 방점과 글자 상자 사이 */
+  color: inherit;
+}
+
+/* 인용문: 명조 16px / 1.6. 글자 상자 위로 0.3em 까지 제 줄이다 */
+.quote {
+  font-family: var(--serif);
+  font-size: var(--text-lg);
+  line-height: 1.6;
+  letter-spacing: -0.02em;
+  --kw-gap: 0.07em;
+}
+
+/* 표 안: 고딕 14px / 1.55. 글자 상자 위로 0.275em 까지 제 줄이다 */
+.table {
+  font-family: var(--sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-body);
+  --kw-gap: 0.055em;
+}
+
+/* 걸린 글자가 든 낱말은 통째로 한 줄에 둔다 */
+.word {
+  white-space: nowrap;
+}
+
+.kw {
+  background: none;
+  color: inherit;
+  font-weight: 700;
+}
+
+.kw i {
+  display: inline-block;
+  font-style: normal;
+  line-height: 1;
+}
+
+/* 방점: 상자 맨 위에 놓고 제 높이만큼 끌어올린다 (상자의 높이는 그대로 1em) */
+.kw i::before {
+  content: '';
+  display: block;
+  width: var(--kw-dot);
+  height: var(--kw-dot);
+  margin: calc((var(--kw-dot) + var(--kw-gap)) * -1) auto var(--kw-gap);
+  border-radius: 50%;
+  background: var(--lamp);
+}
+
+/* 키워드 안의 띄어쓰기: 방점은 없다 */
+.kw .gap {
+  display: inline;
+}
+
+.kw .gap::before {
+  content: none;
+}
+
+/* 표 안에서는 옅은 밑칠을 더한다. 글자 상자의 아래 0.84em 만 칠해서 방점이 밑칠 위에 떠 있다.
+ * (한 가지 색을 정해진 높이로 칠하려고 gradient 문법을 빌렸을 뿐, 번지는 색은 없다) */
+.table .kw i {
+  background: linear-gradient(var(--lamp-tint), var(--lamp-tint)) no-repeat 0 100% / 100% 0.84em;
+}
+
+.table .kw .gap {
+  display: inline-block;
+  white-space: pre;
+}
+
+/* 밑칠의 양 끝을 2px 씩 내민다 */
+.table .kw .start {
+  margin-left: -2px;
+  padding-left: 2px;
+}
+
+.table .kw .end {
+  margin-right: -2px;
+  padding-right: 2px;
+}
+
+/* 제외된 행: 굵기와 불빛을 죽인다 */
+.muted .kw {
+  font-weight: 500;
+}
+
+.muted .kw i {
+  background: none;
+}
+
+.muted .kw i::before {
+  background: var(--ink-4);
+}
+
+/* 한 줄로 줄이기. 위쪽 여백은 맨 윗줄의 방점이 소수점 단위로 잘리는 일을 막는다 (자리는 차지하지 않는다) */
+.oneLine {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-top: 0.2em;
+  margin-top: -0.2em;
+}
+
+/* 여러 줄로 줄이기 */
+.clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--kw-lines);
+  line-clamp: var(--kw-lines);
+  overflow: hidden;
+  padding-top: 0.2em;
+  margin-top: -0.2em;
+}

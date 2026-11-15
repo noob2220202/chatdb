@@ -1,0 +1,84 @@
+.group {
+  display: inline-flex;
+  flex: none;
+  border: var(--line);
+}
+
+.block {
+  display: flex;
+  width: 100%;
+}
+
+.block .item {
+  flex: 1;
+}
+
+.item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: calc(var(--control-h) - 2px);
+  padding: 0 14px;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition:
+    background-color var(--fast) var(--ease),
+    color var(--fast) var(--ease);
+}
+
+.sm .item {
+  height: 26px;
+  padding: 0 10px;
+  font-size: var(--text-xs);
+}
+
+.item + .item {
+  border-left: var(--line);
+}
+
+.icon {
+  display: inline-flex;
+}
+
+@media (hover: hover) {
+  .item:hover:not(:disabled):not([data-state='checked']) {
+    background: var(--paper-2);
+    color: var(--ink);
+  }
+}
+
+.item:active:not(:disabled):not([data-state='checked']) {
+  background: var(--paper-3);
+}
+
+.item[data-state='checked'] {
+  background: var(--ink);
+  color: var(--on-ink);
+  font-weight: 600;
+}
+
+.item:focus-visible {
+  z-index: 1;
+}
+
+.item:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.item:disabled[data-state='checked'] {
+  background: var(--ink-4);
+  color: var(--paper);
+}
+
+.group[data-disabled] {
+  border-color: var(--rule-2);
+}
+
+.group[data-disabled] .item + .item {
+  border-left-color: var(--rule-2);
+}

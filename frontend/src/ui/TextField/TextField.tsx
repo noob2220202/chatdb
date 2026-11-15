@@ -52,7 +52,14 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   const inputType = canReveal && revealed ? 'text' : type
 
   return (
-    <Field label={label} labelAside={labelAside} hint={hint} error={error} id={id} className={className}>
+    <Field
+      label={label}
+      labelAside={labelAside}
+      hint={hint}
+      error={error}
+      id={id}
+      className={className}
+    >
       {(ids) => (
         <div
           className={clsx(styles.shell, styles[size])}

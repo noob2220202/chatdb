@@ -1,0 +1,388 @@
+/* 콘솔의 틀 — 시안의 머리띠, 날짜 줄, 맨 아래 줄. */
+
+.shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.frame {
+  width: 100%;
+  max-width: calc(var(--measure) + 2 * var(--margin));
+  margin: 0 auto;
+  padding: 0 var(--margin);
+}
+
+.main {
+  flex: 1;
+  outline: 0;
+}
+
+.skip {
+  position: absolute;
+  left: var(--margin);
+  top: 0;
+  z-index: var(--z-toast);
+  padding: 8px 12px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  transform: translateY(-110%);
+}
+
+.skip:focus-visible {
+  transform: none;
+  outline-offset: 2px;
+}
+
+/* ── 머리띠 ───────────────────────────────────────── */
+.masthead {
+  position: relative;
+  display: grid;
+  grid-template-columns: 225px minmax(0, 1fr) auto;
+  align-items: center;
+  height: var(--masthead-h);
+  border-bottom: var(--bar);
+}
+
+/* 겹줄의 아랫줄 */
+.masthead::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  border-bottom: var(--line);
+}
+
+.brand {
+  display: inline-flex;
+  justify-self: start;
+  padding: 4px 0;
+}
+
+.sections {
+  display: flex;
+  align-self: stretch;
+  gap: 30px;
+  min-width: 0;
+}
+
+.section {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  padding-top: 3px;
+  font-size: var(--text-md);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* 지금 화면: 굵은 줄이 그 자리에서만 위로 두꺼워진다 */
+.section::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 5px;
+  background: var(--ink);
+  transform: scaleY(0);
+  transform-origin: center bottom;
+  transition: transform var(--fast) var(--ease);
+}
+
+/* 굵기가 바뀌어도 옆 항목이 밀리지 않게 굵은 글자의 폭을 미리 잡는다 */
+.sectionLabel {
+  display: inline-grid;
+}
+
+.sectionLabel::after {
+  content: attr(data-label);
+  height: 0;
+  overflow: hidden;
+  font-weight: 700;
+  visibility: hidden;
+}
+
+@media (hover: hover) {
+  .section:hover {
+    color: var(--ink);
+  }
+
+  .section:hover::after {
+    transform: scaleY(0.6);
+  }
+}
+
+.section[aria-current='page'] {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.section[aria-current='page']::after {
+  transform: scaleY(1);
+}
+
+.section:focus-visible {
+  outline-offset: -4px;
+}
+
+/* 수집함: 오늘 들어온 수 */
+.count {
+  margin: -9px 0 0 3px;
+  font: 500 10.5px/1 var(--mono);
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+
+/* 계정: 확인이 필요하면 글자로 알린다(색 점이 아니라 뒤집힌 이름표) */
+.attention {
+  margin: -9px 0 0 5px;
+  padding: 2px 4px 3px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s-5);
+}
+
+.logout {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 0;
+  font-size: var(--text-sm);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+@media (hover: hover) {
+  .logout:hover:not(:disabled) {
+    color: var(--ink);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+.logout:disabled {
+  color: var(--ink-3);
+}
+
+.logoutIcon {
+  display: none;
+}
+
+/* ── 날짜 줄 ──────────────────────────────────────── */
+.dateline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2px var(--s-6);
+  min-height: 51px;
+  padding: 21px 0 10px;
+  border-bottom: var(--hair);
+  font-size: var(--text-xs);
+  color: var(--ink-3);
+}
+
+.date {
+  flex: none;
+  font: 600 var(--text-md) / 1.3 var(--serif);
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+/* 항목 사이에 가운뎃점을 찍는다. 줄이 바뀌어도 줄 끝(좁은 화면에서는 줄 머리)에 점이 남지 않도록
+   점이 놓이는 자리만큼 바깥으로 밀고 잘라 낸다. */
+.statusClip {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: flex-end;
+  row-gap: 2px;
+  margin-right: -17px;
+}
+
+.statusItem {
+  white-space: nowrap;
+}
+
+.statusItem::after {
+  content: '·';
+  display: inline-block;
+  width: 17px;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.statusState b {
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.lamp {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--lamp);
+}
+
+.lampOff {
+  background: none;
+  box-shadow: inset 0 0 0 1.25px var(--ink-3);
+}
+
+.statusLink,
+.statusAlert {
+  color: var(--ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.statusAlert svg {
+  margin-right: 6px;
+}
+
+@media (hover: hover) {
+  .statusLink:hover,
+  .statusAlert:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+/* ── 맨 아래 줄 ───────────────────────────────────── */
+.footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2px var(--s-6);
+  margin-top: 56px;
+  padding: 12px 0 28px;
+  border-top: var(--hair);
+  font-size: var(--text-xs);
+  line-height: 1.6;
+  color: var(--ink-3);
+}
+
+.footerSep {
+  display: inline-block;
+  width: 17px;
+  color: var(--ink-4);
+  text-align: center;
+}
+
+.version {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 1200 아래: 머리띠를 조인다 ───────────────────── */
+@media (max-width: 1199px) {
+  .masthead {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    column-gap: 32px;
+  }
+
+  .sections {
+    gap: 22px;
+  }
+
+  .logout {
+    display: none;
+  }
+
+  .logoutIcon {
+    display: inline-flex;
+    margin-right: -8px;
+  }
+}
+
+/* ── 900 아래: 차례가 로고 밑의 띠가 된다 ─────────── */
+@media (max-width: 899px) {
+  .masthead {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 54px 42px;
+    column-gap: var(--s-4);
+    height: auto;
+  }
+
+  .sections {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    gap: 22px;
+    /* 바깥 여백까지 띠를 넓혀서 끝이 잘려 보이지 않게 한다 */
+    margin: 0 calc(-1 * var(--margin));
+    padding: 0 var(--margin);
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    border-top: var(--hair);
+  }
+
+  .sections::-webkit-scrollbar {
+    display: none;
+  }
+
+  .section::after {
+    bottom: 0;
+    height: 3px;
+  }
+
+  .meta {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .dateline {
+    padding-top: 17px;
+  }
+
+  .statusClip {
+    flex-basis: 100%;
+  }
+
+  .status {
+    justify-content: flex-start;
+    margin-right: 0;
+    margin-left: -17px;
+  }
+
+  .statusItem::after {
+    content: none;
+  }
+
+  .statusItem::before {
+    content: '·';
+    display: inline-block;
+    width: 17px;
+    color: var(--ink-4);
+    text-align: center;
+  }
+
+  .footer {
+    margin-top: 40px;
+  }
+}
