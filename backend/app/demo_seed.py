@@ -876,9 +876,9 @@ def _lead_status(rng: random.Random, age_days: float) -> LeadStatus:
     elif age_days < 3:
         shares = (84, 11, 4, 1)
     elif age_days < 10:
-        shares = (74, 16, 8, 2)
+        shares = (75, 16, 8, 1)
     else:
-        shares = (64, 21, 12, 3)
+        shares = (65, 21, 12, 2)
     statuses = (LeadStatus.NEW, LeadStatus.REVIEWED, LeadStatus.CONTACTED, LeadStatus.EXCLUDED)
     return rng.choices(statuses, weights=shares)[0]
 
@@ -1263,7 +1263,7 @@ async def _sync_world(
                 ),
             )
         if account.flood_until is not None and account.flood_until > now:
-            gateway.start_flood_wait(account.id, (account.flood_until - now).total_seconds())
+            gateway.start_flood_wait(account.id, account.flood_until)
         seeded = _SEEDED_USER_IDS.get(account.tg_user_id or 0)
         if seeded is not None:
             for step in (0, 3, 5):

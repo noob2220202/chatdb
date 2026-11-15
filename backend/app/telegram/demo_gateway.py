@@ -8,7 +8,7 @@
     gateway.register_chat(account_id, chat, target=target)   # 이미 들어가 있는 그룹
     gateway.register_request(account_id, target, chat)       # 승인을 기다리는 입장 요청
     gateway.revoke_session("demo:10")                        # 이 세션은 만료됐다
-    gateway.start_flood_wait(account_id, 840)                # 이 계정은 요청 제한 중이다
+    gateway.start_flood_wait(account_id, until)              # 이 계정은 until 까지 요청 제한이다
 
 세계(사람들, 그룹 구성원, 링크별 가입 결과)는 언제 만들어도 같다. 그래서 다시 켜도 같은 사람이
 같은 아이디로 말한다. 무작위인 것은 누가 언제 무슨 말을 하느냐뿐이고, seed 로 고정할 수 있다.
@@ -74,7 +74,6 @@ _FIXED_INTENT_SHARE = 0.3
 _CHATTY_PER_CHAT = 2
 _CHATTY_WEIGHT = 9.0
 _BOT_WEIGHT = 0.5
-_USERNAME_RE = re.compile(r"[A-Za-z][A-Za-z0-9_]{4,31}")
 
 _MSG_SESSION_EXPIRED = "세션이 만료됐어요. 다시 로그인해 주세요."
 _MSG_SESSION_CLOSED = "다른 기기에서 이 세션을 종료했어요. 다시 로그인해 주세요."
@@ -1024,9 +1023,11 @@ class DemoGateway(TelegramGateway):
                     TelegramError(TgErrorCode.SESSION_INVALID, _MSG_SESSION_CLOSED, permanent=True)
                 )
 
-    def start_flood_wait(self, account_id: int, seconds: float) -> None:
-        """이 계정을 seconds 초 동안 요청 제한에 건다. 그동안의 요청은 FLOOD_WAIT 로 거절한다."""
-        until = self._clock() + timedelta(seconds=seconds)
+    def start_flood_wait(self, account_id: int, until: datetime) -> None:
+        """이 계정을 until 까지 요청 제한에 건다. 그때까지의 요청은 FLOOD_WAIT 로 거절한다.
+
+        이미 더 늦게 풀리는 제한이 걸려 있으면 그대로 둔다.
+        """
         current = self._flood_until.get(account_id)
         if current is None or current < until:
             self._flood_until[account_id] = until
@@ -1081,6 +1082,7 @@ class DemoGateway(TelegramGateway):
         return self._rng.uniform(*self._join_delay)
 
     def refuse_if_limited(self, account_id: int) -> None:
+        """계정이 요청 제한 중이면 남은 시간을 담아 TelegramError(FLOOD_WAIT) 를 던진다."""
         until = self._flood_until.get(account_id)
         if until is None:
             return
@@ -1135,7 +1137,8 @@ class DemoGateway(TelegramGateway):
         if kind == JoinPlanKind.FLOOD:
             if key not in self._flooded_once:
                 self._flooded_once.add(key)
-                self.start_flood_wait(account_id, plan.flood_seconds)
+                until = self._clock() + timedelta(seconds=plan.flood_seconds)
+                self.start_flood_wait(account_id, until)
                 raise _flood_error(plan.flood_seconds)
             kind = JoinPlanKind.JOINED
         if kind == JoinPlanKind.EXPIRED:

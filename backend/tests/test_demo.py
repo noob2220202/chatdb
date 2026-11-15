@@ -907,8 +907,8 @@ async def test_new_groups_get_distinct_titles(gateway: DemoGateway, client: Demo
 async def test_scripted_flood_wait(
     gateway: DemoGateway, client: DemoClient, clock: TickClock
 ) -> None:
-    gateway.start_flood_wait(1, 14 * 60)
-    gateway.start_flood_wait(1, 30)  # 더 짧은 제한이 긴 제한을 줄이지는 않는다
+    gateway.start_flood_wait(1, clock.now + timedelta(minutes=14))
+    gateway.start_flood_wait(1, clock.now + timedelta(seconds=30))  # 긴 제한을 줄이지는 않는다
     error = await expect_error(client.list_groups(), TgErrorCode.FLOOD_WAIT)
     assert error.retry_after == 14 * 60
     assert "14분" in error.message
@@ -1640,6 +1640,8 @@ async def test_full_app_collects_live_traffic_and_shuts_down_cleanly(tmp_path: P
     async with app.router.lifespan_context(app):
         seeded_hits = await hit_count(ctx)
         assert seeded_hits > TOTAL_LEADS
+        async with ctx.db.session() as session:
+            seeded_user_ids = (await session.scalars(select(Lead.tg_user_id))).all()
 
         async with ctx.bus.subscribe() as events:
 
@@ -1680,6 +1682,14 @@ async def test_full_app_collects_live_traffic_and_shuts_down_cleanly(tmp_path: P
 
         await wait_until(activity_hit, within=10, what="활동량 감지")
 
+        # 처음 보는 사람도 수집된다.
+        async def new_lead() -> bool:
+            async with ctx.db.session() as session:
+                count = await session.scalar(select(func.count()).select_from(Lead)) or 0
+            return count > TOTAL_LEADS
+
+        await wait_until(new_lead, within=10, what="새로 수집된 유저")
+
         async with ctx.db.session() as session:
             fresh = (await session.scalars(select(Hit).where(Hit.id > seeded_hits))).all()
             leads = {lead.id: lead for lead in (await session.scalars(select(Lead))).all()}
@@ -1694,7 +1704,7 @@ async def test_full_app_collects_live_traffic_and_shuts_down_cleanly(tmp_path: P
             assert hit.account_id not in (None, GUNWOO)
             if hit.kind == RuleKind.KEYWORD:
                 assert hit.excerpt and hit.keywords
-        assert len(leads) > TOTAL_LEADS  # 처음 보는 사람도 수집된다
+        assert {leads[hit.lead_id].tg_user_id for hit in fresh} - set(seeded_user_ids)
 
     assert other_tasks() == set()  # 남은 태스크 없이 내려간다
 
