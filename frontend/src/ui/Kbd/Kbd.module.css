@@ -1,0 +1,22 @@
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px 1px;
+  border: 1px solid var(--rule-2);
+  border-bottom-color: var(--ink-3);
+  background: var(--paper-raised);
+  color: var(--ink-2);
+  font: 500 var(--text-2xs) / 1 var(--mono);
+  letter-spacing: 0;
+  white-space: nowrap;
+  vertical-align: 1px;
+}
+
+.onInk {
+  border-color: var(--on-ink-2);
+  background: transparent;
+  color: var(--on-ink);
+}

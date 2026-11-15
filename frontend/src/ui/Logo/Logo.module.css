@@ -1,0 +1,46 @@
+.logo {
+  display: block;
+  flex: none;
+  color: var(--ink);
+  overflow: visible;
+}
+
+.ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.sleeve {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3.4;
+}
+
+/* 켜질 때는 필라멘트처럼 한 번 깜빡이며 바로 들어오고, 꺼질 때는 조용히 식는다 */
+.lamp {
+  fill: var(--lamp);
+  opacity: 0;
+  transition: opacity var(--normal) linear;
+}
+
+.logo[data-lit] .lamp {
+  opacity: 1;
+  transition: none;
+  animation: strike 180ms linear;
+}
+
+@keyframes strike {
+  0% {
+    opacity: 0;
+  }
+  35% {
+    opacity: 1;
+  }
+  55% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}

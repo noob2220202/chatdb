@@ -1,0 +1,243 @@
+/* 버튼 — 먹과 괘선만으로.
+ *   올려놓음: 면이 뒤집힌다(먹 ↔ 종이)   누름: 한 단계 더 눌린 면
+ *   포커스: 먹색 링(base.css)             못 씀: 괘선색 테, 흐린 글자
+ *   처리 중: 폭은 그대로, 글자 자리에 점 세 개
+ */
+.button {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  height: var(--control-h);
+  padding: 0 14px;
+  border: var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  user-select: none;
+  transition:
+    background-color var(--fast) var(--ease),
+    color var(--fast) var(--ease),
+    border-color var(--fast) var(--ease);
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
+}
+
+.icon {
+  display: inline-flex;
+  flex: none;
+}
+
+/* 크기 */
+.sm {
+  height: 28px;
+  padding: 0 10px;
+  gap: 6px;
+  font-size: var(--text-xs);
+}
+
+.lg {
+  height: var(--control-h-lg);
+  padding: 0 20px;
+  gap: var(--s-3);
+  font-size: 15px;
+}
+
+.block {
+  display: flex;
+  width: 100%;
+}
+
+.block.lg {
+  justify-content: space-between;
+}
+
+/* ── 테(기본) ─────────────────────────────────────── */
+@media (hover: hover) {
+  .outline:hover {
+    background: var(--ink);
+    color: var(--on-ink);
+  }
+}
+
+.outline:active {
+  background: var(--ink-2);
+  border-color: var(--ink-2);
+  color: var(--on-ink);
+}
+
+/* ── 면(주요 동작) ────────────────────────────────── */
+.solid {
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+@media (hover: hover) {
+  .solid:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
+}
+
+.solid:active {
+  background: var(--paper-3);
+  color: var(--ink);
+}
+
+/* ── 글자(조용한 동작) ────────────────────────────── */
+.quiet {
+  padding: 0;
+  border-color: transparent;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.quiet.sm,
+.quiet.lg {
+  padding: 0;
+}
+
+@media (hover: hover) {
+  .quiet:hover {
+    text-decoration-thickness: 2px;
+  }
+}
+
+.quiet:active {
+  color: var(--ink-2);
+}
+
+/* ── 못 쓰는 상태 ─────────────────────────────────── */
+.button:disabled,
+.button[aria-disabled='true'] {
+  border-color: var(--rule-2);
+  background: transparent;
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.solid:disabled,
+.solid[aria-disabled='true'] {
+  border-color: var(--paper-3);
+  background: var(--paper-3);
+}
+
+.quiet:disabled,
+.quiet[aria-disabled='true'] {
+  border-color: transparent;
+  text-decoration-color: var(--rule-2);
+}
+
+/* ── 처리 중: 원래 모습을 지키고 글자만 숨긴다 ─────── */
+.button[data-loading] {
+  cursor: progress;
+}
+
+.button[data-loading] > :not(.loader) {
+  visibility: hidden;
+}
+
+.outline[data-loading] {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.solid[data-loading] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--on-ink);
+}
+
+.quiet[data-loading] {
+  color: var(--ink);
+}
+
+.loader {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+}
+
+.dots {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.dots i {
+  width: 4px;
+  height: 4px;
+  background: currentColor;
+  opacity: 0.25;
+  animation: dot 900ms steps(1, end) infinite;
+}
+
+.dots i:nth-child(2) {
+  animation-delay: 300ms;
+}
+
+.dots i:nth-child(3) {
+  animation-delay: 600ms;
+}
+
+@keyframes dot {
+  0%,
+  33% {
+    opacity: 1;
+  }
+  34%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dots i {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* ── 먹색 면 위 ──────────────────────────────────── */
+.onInk {
+  border-color: var(--on-ink);
+  color: var(--on-ink);
+}
+
+@media (hover: hover) {
+  .onInk.outline:hover {
+    background: var(--on-ink);
+    color: var(--ink);
+  }
+}
+
+.onInk.outline:active {
+  border-color: var(--on-ink-2);
+  background: var(--on-ink-2);
+  color: var(--ink);
+}
+
+.onInk.quiet {
+  border-color: transparent;
+}
+
+.onInk.quiet:active {
+  color: var(--on-ink-2);
+}
+
+.onInk:focus-visible {
+  outline-color: var(--on-ink);
+}

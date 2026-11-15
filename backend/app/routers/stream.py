@@ -65,6 +65,9 @@ def stop_check(request: Request, ctx: AppContext) -> Callable[[], Awaitable[bool
     클라이언트가 끊었을 때, 그리고 스트림이 열려 있는 사이에 로그인이 무효가 됐을 때다
     (비밀번호를 바꿔 다른 기기를 로그아웃시킨 경우, 쿠키가 만료된 경우).
     로그인은 AUTH_RECHECK_SECONDS 에 한 번만 DB 에서 다시 확인한다.
+
+    끊김 확인(request.is_disconnected)은 main.py 의 http 미들웨어 뒤에서는 끊김을 알려 주지
+    못한다. 그 경우에도 서버가 스트림을 취소하거나 전송이 실패하면서 끝나므로 구독이 남지는 않는다.
     """
     checked_at = time.monotonic()
 

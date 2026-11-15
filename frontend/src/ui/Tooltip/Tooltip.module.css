@@ -1,0 +1,27 @@
+.tooltip {
+  z-index: var(--z-toast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  max-width: 280px;
+  padding: 5px 8px 6px;
+  background: var(--ink);
+  color: var(--on-ink);
+  font-size: var(--text-xs);
+  font-weight: 500;
+  line-height: 1.35;
+  user-select: none;
+  animation: show var(--fast) var(--ease);
+}
+
+.shortcut {
+  font-family: var(--mono);
+  font-size: var(--text-2xs);
+  color: var(--on-ink-2);
+}
+
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+}

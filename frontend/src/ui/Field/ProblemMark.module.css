@@ -1,0 +1,24 @@
+.mark {
+  display: inline-block;
+  flex: none;
+  vertical-align: -2px;
+}
+
+.plate {
+  fill: var(--ink);
+}
+
+.cross {
+  fill: none;
+  stroke: var(--on-ink);
+  stroke-width: 1.6;
+  stroke-linecap: square;
+}
+
+.onInk .plate {
+  fill: var(--on-ink);
+}
+
+.onInk .cross {
+  stroke: var(--ink);
+}

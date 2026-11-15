@@ -1,0 +1,10 @@
+/* 글자는 모두 패키지에서 직접 싣는다(CDN 없음).
+ *   고딕  Pretendard Variable — 쓰는 글자만 내려받는 다이내믹 서브셋
+ *   명조  Noto Serif KR Variable (본명조)
+ *   모노  IBM Plex Mono 400 / 500 / 600 (라틴)
+ */
+@import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css';
+@import '@fontsource-variable/noto-serif-kr/wght.css';
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-mono/latin-600.css';

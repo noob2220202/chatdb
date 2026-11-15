@@ -111,8 +111,11 @@ async def _login_step(
 
 
 def _file_too_large() -> ApiError:
+    megabytes = MAX_SESSION_FILE_BYTES // (1024 * 1024)
     return ApiError(
-        413, "세션 파일이 너무 커요. 2MB 이하 파일만 올릴 수 있어요.", code="file_too_large"
+        413,
+        f"세션 파일이 너무 커요. {megabytes}MB 이하 파일만 올릴 수 있어요.",
+        code="file_too_large",
     )
 
 

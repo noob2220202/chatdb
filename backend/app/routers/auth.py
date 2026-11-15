@@ -28,7 +28,7 @@ async def _find_admin(session: AsyncSession) -> Admin | None:
 
 def _client_key(request: Request) -> str:
     """로그인 제한을 거는 단위. 프록시 헤더는 속일 수 있어서 실제 접속 주소만 본다."""
-    return request.headers.get("x-forwarded-for") or (request.client.host if request.client else "unknown")
+    return request.client.host if request.client else "unknown"
 
 
 def _issue_cookie(response: Response, ctx: AppContext, token_version: int) -> None:
