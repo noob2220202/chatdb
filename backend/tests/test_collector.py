@@ -3,9 +3,8 @@
 from __future__ import annotations
 
 import asyncio
-import contextlib
 import itertools
-from collections.abc import Awaitable, Callable, Iterator, Sequence
+from collections.abc import Iterator, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta, timezone
 from typing import Any
@@ -264,15 +263,6 @@ async def env(tmp_path):
         finally:
             await collector.stop()
             await db.dispose()
-
-
-async def wait_until(condition: Callable[[], Awaitable[bool]], timeout: float = 5.0) -> None:
-    loop = asyncio.get_running_loop()
-    deadline = loop.time() + timeout
-    while not await condition():
-        if loop.time() > deadline:
-            raise AssertionError("기다리던 조건이 시간 안에 만족되지 않았어요")
-        await asyncio.sleep(0.01)
 
 
 # ---------------------------------------------------------------------------
@@ -621,6 +611,15 @@ async def test_hit_keeps_display_title_when_group_has_no_title(env: Env) -> None
     assert hit.group_title == "@seoul_market"
 
 
+async def test_hit_from_unknown_account_is_kept_without_account(env: Env) -> None:
+    await env.add_keyword_rule(["추천"])
+
+    await env.say("추천 부탁드려요", account_id=999)
+
+    [hit] = await env.hits()
+    assert (hit.group_id, hit.account_id) == (env.group_id, None)
+
+
 # ---------------------------------------------------------------------------
 # 캐시
 # ---------------------------------------------------------------------------
@@ -684,6 +683,45 @@ async def test_rule_deleted_behind_the_cache_is_skipped_quietly(env: Env) -> Non
 
     assert await env.leads() == []
     assert await env.logs() == []
+
+
+async def test_rule_disabled_behind_the_cache_is_skipped_quietly(env: Env) -> None:
+    keyword_rule = await env.add_keyword_rule(["추천"])
+    activity_rule = await env.add_activity_rule(min_messages=2, window_hours=1)
+    await env.say("안녕하세요")  # 캐시를 채운다
+    async with env.db.session() as session:
+        for rule_id in (keyword_rule, activity_rule):
+            rule = await session.get(Rule, rule_id)
+            assert rule is not None
+            rule.enabled = False
+        await session.commit()
+
+    await env.say("추천 부탁드려요")
+    await env.collector.flush()
+
+    assert await env.leads() == []
+    assert await env.logs() == []
+
+
+async def test_invalidate_during_a_reload_is_not_lost(
+    env: Env, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original = env.collector._load_snapshot
+
+    async def racing() -> Any:
+        snapshot = await original()
+        # 캐시를 읽은 직후에 규칙이 생기고 invalidate() 가 불린 상황
+        await env.add_keyword_rule(["견적"])
+        env.collector.invalidate()
+        return snapshot
+
+    with monkeypatch.context() as patch:
+        patch.setattr(env.collector, "_load_snapshot", racing)
+        await env.say("안녕하세요")
+
+    await env.say("견적 부탁드려요")
+
+    assert len(await env.hits()) == 1
 
 
 # ---------------------------------------------------------------------------
@@ -912,6 +950,23 @@ async def test_activity_is_summed_across_my_accounts_in_the_same_chat(env: Env) 
     assert len(await env.hits()) == 1
 
 
+async def test_activity_evaluation_reads_many_users_in_chunks(
+    env: Env, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(collector_module, "IN_CHUNK", 2)
+    await env.add_activity_rule(min_messages=2, window_hours=1)
+    chatty = [TgUser(id=200 + index, username=f"user_{index}") for index in range(5)]
+
+    for user in chatty:
+        await env.say("수다", sender=user)
+        await env.say("수다", sender=user)
+    await env.say("수다", sender=BOB)  # 기준 미달
+    await env.collector.flush()
+
+    assert [lead.tg_user_id for lead in await env.leads()] == [user.id for user in chatty]
+    assert [hit.message_count for hit in await env.hits()] == [2] * 5
+
+
 async def test_two_activity_rules_fire_independently(env: Env) -> None:
     quick = await env.add_activity_rule(min_messages=2, window_hours=1, name="가벼운 활동")
     heavy = await env.add_activity_rule(min_messages=4, window_hours=1, name="많은 활동")
@@ -945,6 +1000,18 @@ async def test_activity_skips_user_blocked_before_flush(env: Env) -> None:
     assert await env.leads() == []
     [bucket] = await env.buckets()
     assert bucket.count == 2
+
+
+async def test_activity_hit_uses_the_latest_profile_of_the_user(env: Env) -> None:
+    await env.add_activity_rule(min_messages=2, window_hours=1)
+    renamed = TgUser(id=ALICE.id, username="alice_new", first_name="Alice")
+
+    await env.say("수다")
+    await env.say("수다", sender=renamed)
+    await env.collector.flush()
+
+    [lead] = await env.leads()
+    assert (lead.username, lead.first_name, lead.last_name) == ("alice_new", "Alice", None)
 
 
 async def test_keyword_then_activity_share_one_lead(env: Env) -> None:
@@ -1128,10 +1195,10 @@ async def test_activity_evaluation_failure_does_not_fail_flush(
     await env.say("수다")
     with monkeypatch.context() as patch:
 
-        async def broken(*args: Any, **kwargs: Any) -> int:
+        async def broken(*args: Any, **kwargs: Any) -> dict[int, int]:
             raise RuntimeError("database is locked")
 
-        patch.setattr(env.collector, "_count_recent_messages", broken)
+        patch.setattr(env.collector, "_sum_recent_messages", broken)
         await env.collector.flush()
     assert await env.hits() == []
     [bucket] = await env.buckets()
@@ -1155,26 +1222,28 @@ async def test_background_task_flushes_periodically_and_survives_errors(
     collector = make_collector(env, flush_interval=0.01)
     original = collector._write_counts
     failures = 0
+    written = asyncio.Event()
 
     async def flaky(*args: Any, **kwargs: Any) -> Any:
         nonlocal failures
         if failures < 2:
             failures += 1
             raise RuntimeError("disk is busy")
-        return await original(*args, **kwargs)
+        result = await original(*args, **kwargs)
+        written.set()
+        return result
 
     monkeypatch.setattr(collector, "_write_counts", flaky)
     await collector.start()
     try:
         await collector.handle(env.message("안녕하세요"), env.group_id)
-
-        async def flushed() -> bool:
-            return (await env.group()).messages_seen == 1
-
-        await wait_until(flushed)
-        assert failures == 2
+        async with asyncio.timeout(5):
+            await written.wait()
     finally:
         await collector.stop()
+
+    assert failures == 2
+    assert (await env.group()).messages_seen == 1
 
 
 async def test_start_twice_keeps_one_task_and_stop_does_final_flush(env: Env) -> None:
@@ -1213,6 +1282,36 @@ async def test_stop_swallows_final_flush_failure(
     assert "남은 버퍼를 저장하지 못했어요" in caplog.text
 
     # 버퍼는 남아 있어 다음 flush 에 반영된다.
-    with contextlib.suppress(RuntimeError):
-        await collector.flush()
+    await collector.flush()
+    assert (await env.group()).messages_seen == 1
+
+
+async def test_stop_lets_a_running_flush_finish_instead_of_cutting_it(
+    env: Env, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    collector = make_collector(env, flush_interval=0.01)
+    original = collector._write_counts
+    started = asyncio.Event()
+    attempts = 0
+    writes = 0
+
+    async def slow(*args: Any, **kwargs: Any) -> Any:
+        nonlocal attempts, writes
+        attempts += 1
+        started.set()
+        await asyncio.sleep(0.05)
+        result = await original(*args, **kwargs)
+        writes += 1
+        return result
+
+    monkeypatch.setattr(collector, "_write_counts", slow)
+    await collector.handle(env.message("안녕하세요"), env.group_id)
+    await collector.start()
+    async with asyncio.timeout(5):
+        await started.wait()
+
+    await collector.stop()
+
+    # 진행 중이던 flush 가 끊기지 않고 끝까지 가서, 마지막 flush 는 더 쓸 것이 없다.
+    assert (attempts, writes) == (1, 1)
     assert (await env.group()).messages_seen == 1

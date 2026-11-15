@@ -14,10 +14,15 @@ from datetime import UTC, datetime, timedelta
 from typing import Any, cast
 
 from sqlalchemy import (
+    BigInteger,
     CursorResult,
+    Integer,
     UpdateBase,
+    and_,
+    bindparam,
     case,
     delete,
+    exists,
     func,
     insert,
     literal,
@@ -59,8 +64,42 @@ SEEN_MESSAGES_LIMIT = 50_000
 COOLDOWN_LIMIT = 20_000
 FAILURE_NOTICE_INTERVAL = timedelta(minutes=10)
 """같은 종류의 실패를 활동 기록에 다시 남기기까지 두는 간격."""
+IN_CHUNK = 500
+"""IN 절 하나에 넣는 값의 최대 개수."""
 
 Clock = Callable[[], datetime]
+
+# flush 가 한 번에 여러 행을 쓰는 문장들. 행마다 값만 바꿔 executemany 로 실행한다.
+_GROUP_ID = bindparam("b_group_id", type_=Integer)
+_USER_ID = bindparam("b_tg_user_id", type_=BigInteger)
+_HOUR = bindparam("b_hour", type_=UTCDateTime)
+_AMOUNT = bindparam("b_amount", type_=Integer)
+_SEEN_AT = bindparam("b_seen_at", type_=UTCDateTime)
+
+_ADD_GROUP_MESSAGES = (
+    update(Group)
+    .where(Group.id == _GROUP_ID)
+    .values(
+        messages_seen=Group.messages_seen + _AMOUNT,
+        last_message_at=case(
+            (or_(Group.last_message_at.is_(None), Group.last_message_at < _SEEN_AT), _SEEN_AT),
+            else_=Group.last_message_at,
+        ),
+    )
+)
+_SAME_BUCKET = and_(
+    ActivityBucket.group_id == _GROUP_ID,
+    ActivityBucket.tg_user_id == _USER_ID,
+    ActivityBucket.hour == _HOUR,
+)
+# 없는 집계 행을 0 으로 만들어 두고(_ENSURE_BUCKET) 그 위에 더한다(_ADD_BUCKET_MESSAGES).
+_ENSURE_BUCKET = insert(ActivityBucket).from_select(
+    ["group_id", "tg_user_id", "hour", "count"],
+    select(_GROUP_ID, _USER_ID, _HOUR, literal(0)).where(~exists().where(_SAME_BUCKET)),
+)
+_ADD_BUCKET_MESSAGES = (
+    update(ActivityBucket).where(_SAME_BUCKET).values(count=ActivityBucket.count + _AMOUNT)
+)
 
 
 def _as_utc(value: datetime) -> datetime:
@@ -161,6 +200,15 @@ class _Actor:
 
 
 @dataclass(frozen=True, slots=True)
+class _Talker:
+    """이번 flush 에서 말한 (그룹, 유저) 한 쌍과, 그 그룹에 걸려 있는 활동량 규칙."""
+
+    group_id: int
+    actor: _Actor
+    rules: list[_ActivityRule]
+
+
+@dataclass(frozen=True, slots=True)
 class _Detection:
     kind: RuleKind
     rule_id: int
@@ -179,10 +227,11 @@ class _GroupIndex:
 
     def __init__(self, rows: Iterable[tuple[int, int | None]]) -> None:
         self._chat_by_group: dict[int, int | None] = dict(rows)
-        self._groups_by_chat: dict[int, list[int]] = {}
+        groups_by_chat: dict[int, list[int]] = {}
         for group_id, chat_id in self._chat_by_group.items():
             if chat_id is not None:
-                self._groups_by_chat.setdefault(chat_id, []).append(group_id)
+                groups_by_chat.setdefault(chat_id, []).append(group_id)
+        self._groups_by_chat = {chat_id: tuple(ids) for chat_id, ids in groups_by_chat.items()}
 
     def __contains__(self, group_id: int) -> bool:
         return group_id in self._chat_by_group
@@ -190,11 +239,11 @@ class _GroupIndex:
     def chat_id(self, group_id: int) -> int | None:
         return self._chat_by_group.get(group_id)
 
-    def same_chat(self, group_id: int) -> list[int]:
+    def same_chat(self, group_id: int) -> tuple[int, ...]:
         """이 그룹과 같은 방을 가리키는 그룹 행들(자기 자신 포함)."""
         chat_id = self._chat_by_group.get(group_id)
         if chat_id is None:
-            return [group_id]
+            return (group_id,)
         return self._groups_by_chat[chat_id]
 
 
@@ -204,6 +253,12 @@ class _GroupIndex:
 
 
 class Collector:
+    """메시지마다 handle() 이 불리고, 주기적으로 flush() 가 돈다.
+
+    handle() 은 키워드 감지만 바로 DB 에 쓰고 나머지(그룹 카운터, 활동량)는 메모리에 모아 둔다.
+    DB 쓰기는 모두 _write_lock 아래에서 한 줄로 이뤄진다.
+    """
+
     def __init__(
         self,
         *,
@@ -484,16 +539,16 @@ class Collector:
     async def _record_hit(self, detection: _Detection, now: datetime) -> bool:
         """감지 한 건을 한 트랜잭션으로 기록하고 실시간 이벤트를 낸다.
 
-        쓰기 락을 쥔 채로 불러야 한다. 그 사이 그룹·규칙이 지워졌거나 유저가 제외 상태가
-        됐으면 기록하지 않고 False 를 돌려준다.
+        쓰기 락을 쥔 채로 불러야 한다. 캐시를 읽은 뒤 그룹이 지워졌거나, 규칙이 지워지거나
+        꺼졌거나, 유저가 제외 상태가 됐으면 기록하지 않고 False 를 돌려준다.
         """
         user = detection.user
         async with self._db.session() as session:
             group = await session.get(Group, detection.group_id)
             rule = await session.get(Rule, detection.rule_id)
-            if group is None or rule is None:
+            if group is None or rule is None or not rule.enabled:
                 logger.debug(
-                    "그룹이나 규칙이 지워져서 감지를 기록하지 않아요 (rule_id=%s, group_id=%s)",
+                    "그룹이나 규칙이 없어져서 감지를 기록하지 않아요 (rule_id=%s, group_id=%s)",
                     detection.rule_id,
                     detection.group_id,
                 )
@@ -585,16 +640,12 @@ class Collector:
             # 집계는 저장됐다. 평가만 다음 flush 로 미룬다.
             self._restore({}, {}, actors)
             raise
-        for (group_id, _user_id), actor in actors.items():
+        for group_ids, talkers in self._talkers_by_chat(state, groups, actors).items():
             try:
-                await self._evaluate_activity(state, groups, group_id, actor, now)
+                await self._evaluate_activity(group_ids, talkers, now)
             except Exception:
-                # 집계는 이미 저장됐으므로 그 유저가 다음에 말할 때 다시 평가된다.
-                logger.exception(
-                    "활동량 규칙을 평가하지 못했어요 (group_id=%s, tg_user_id=%s)",
-                    group_id,
-                    actor.user.id,
-                )
+                # 집계는 이미 저장됐으므로 그 방의 유저가 다음에 말할 때 다시 평가된다.
+                logger.exception("활동량 규칙을 평가하지 못했어요 (group_ids=%s)", group_ids)
                 await self._notify_failure(
                     "evaluate",
                     "활동량 규칙을 평가하다 문제가 생겼어요. 계속되면 서버 로그를 확인해 주세요.",
@@ -629,120 +680,128 @@ class Collector:
             rows = (await session.execute(select(Group.id, Group.tg_chat_id))).all()
             groups = _GroupIndex((group_id, chat_id) for group_id, chat_id in rows)
 
-            for group_id, counter in counters.items():
-                if group_id not in groups:
-                    continue
-                seen_at = counter.last_message_at
-                await _run_dml(
-                    session,
-                    update(Group)
-                    .where(Group.id == group_id)
-                    .values(
-                        messages_seen=Group.messages_seen + counter.messages,
-                        last_message_at=case(
-                            (
-                                or_(
-                                    Group.last_message_at.is_(None),
-                                    Group.last_message_at < seen_at,
-                                ),
-                                literal(seen_at, UTCDateTime),
-                            ),
-                            else_=Group.last_message_at,
-                        ),
-                    ),
-                )
+            counter_rows = [
+                {
+                    "b_group_id": group_id,
+                    "b_amount": counter.messages,
+                    "b_seen_at": counter.last_message_at,
+                }
+                for group_id, counter in counters.items()
+                if group_id in groups
+            ]
+            bucket_rows = [
+                {
+                    "b_group_id": group_id,
+                    "b_tg_user_id": tg_user_id,
+                    "b_hour": hour,
+                    "b_amount": count,
+                }
+                for (group_id, tg_user_id, hour), count in activity.items()
+                if group_id in groups
+            ]
+            bucket_keys = [
+                {name: value for name, value in row.items() if name != "b_amount"}
+                for row in bucket_rows
+            ]
 
-            for (group_id, tg_user_id, hour), count in activity.items():
-                if group_id not in groups:
-                    continue
-                updated = await _run_dml(
-                    session,
-                    update(ActivityBucket)
-                    .where(
-                        ActivityBucket.group_id == group_id,
-                        ActivityBucket.tg_user_id == tg_user_id,
-                        ActivityBucket.hour == hour,
-                    )
-                    .values(count=ActivityBucket.count + count),
-                )
-                if updated == 0:
-                    await _run_dml(
-                        session,
-                        insert(ActivityBucket).values(
-                            group_id=group_id, tg_user_id=tg_user_id, hour=hour, count=count
-                        ),
-                    )
+            connection = await session.connection()
+            if counter_rows:
+                await connection.execute(_ADD_GROUP_MESSAGES, counter_rows)
+            if bucket_rows:
+                await connection.execute(_ENSURE_BUCKET, bucket_keys)
+                await connection.execute(_ADD_BUCKET_MESSAGES, bucket_rows)
             await session.commit()
         return groups
 
+    @staticmethod
+    def _talkers_by_chat(
+        state: _Snapshot, groups: _GroupIndex, actors: dict[tuple[int, int], _Actor]
+    ) -> dict[tuple[int, ...], list[_Talker]]:
+        """평가할 (그룹, 유저) 쌍을 방별로 모은다. 키는 그 방을 가리키는 그룹 행들이다.
+
+        내 계정 둘이 같은 방에 있으면 집계가 두 그룹 행에 나뉘어 쌓이므로 방 단위로 합쳐서 본다.
+        """
+        by_chat: dict[tuple[int, ...], list[_Talker]] = {}
+        for (group_id, _tg_user_id), actor in actors.items():
+            if group_id not in groups or state.skips(actor.user):
+                continue
+            chat_id = groups.chat_id(group_id)
+            rules = [rule for rule in state.activity_rules if rule.scope.covers(group_id, chat_id)]
+            if rules:
+                talker = _Talker(group_id, actor, rules)
+                by_chat.setdefault(groups.same_chat(group_id), []).append(talker)
+        return by_chat
+
     async def _evaluate_activity(
-        self,
-        state: _Snapshot,
-        groups: _GroupIndex,
-        group_id: int,
-        actor: _Actor,
-        now: datetime,
+        self, group_ids: tuple[int, ...], talkers: list[_Talker], now: datetime
     ) -> None:
-        """이번 flush 에서 말한 (그룹, 유저) 한 쌍에 활동량 규칙을 적용한다."""
-        user = actor.user
-        if group_id not in groups or state.skips(user):
-            return
-        chat_id = groups.chat_id(group_id)
-        rules = [rule for rule in state.activity_rules if rule.scope.covers(group_id, chat_id)]
-        if not rules:
-            return
-        # 내 계정 둘이 같은 방에 있으면 집계가 두 그룹 행에 나뉘어 쌓이므로 합쳐서 본다.
-        group_ids = groups.same_chat(group_id)
+        """한 방에서 이번 flush 에 말한 유저들에게 활동량 규칙을 적용한다."""
+        windows = {rule.window_hours for talker in talkers for rule in talker.rules}
+        user_ids = sorted({talker.actor.user.id for talker in talkers})
 
-        due: list[tuple[_ActivityRule, int]] = []
+        due: list[_Detection] = []
+        claimed: set[tuple[int, int]] = set()
         async with self._db.session() as session:
-            totals: dict[int, int] = {}
-            for rule in rules:
-                window = timedelta(hours=rule.window_hours)
-                if rule.window_hours not in totals:
-                    totals[rule.window_hours] = await self._count_recent_messages(
-                        session, group_ids, user.id, _floor_hour(now - window)
+            totals = {
+                hours: await self._sum_recent_messages(
+                    session, group_ids, user_ids, _floor_hour(now - timedelta(hours=hours))
+                )
+                for hours in windows
+            }
+            for talker in talkers:
+                user = talker.actor.user
+                for rule in talker.rules:
+                    total = totals[rule.window_hours].get(user.id, 0)
+                    # 같은 유저가 이 방의 두 그룹 행에 걸쳐 말했어도 규칙당 한 번만 기록한다.
+                    if total < rule.min_messages or (user.id, rule.id) in claimed:
+                        continue
+                    claimed.add((user.id, rule.id))
+                    since = now - timedelta(hours=rule.window_hours)
+                    if await self._has_activity_hit_since(
+                        session, group_ids, user.id, rule.id, since
+                    ):
+                        continue
+                    due.append(
+                        _Detection(
+                            kind=RuleKind.ACTIVITY,
+                            rule_id=rule.id,
+                            group_id=talker.group_id,
+                            account_id=talker.actor.account_id,
+                            user=user,
+                            message_count=total,
+                            window_hours=rule.window_hours,
+                        )
                     )
-                total = totals[rule.window_hours]
-                if total < rule.min_messages:
-                    continue
-                if await self._has_activity_hit_since(
-                    session, group_ids, user.id, rule.id, now - window
-                ):
-                    continue
-                due.append((rule, total))
 
-        for rule, total in due:
-            await self._record_hit(
-                _Detection(
-                    kind=RuleKind.ACTIVITY,
-                    rule_id=rule.id,
-                    group_id=group_id,
-                    account_id=actor.account_id,
-                    user=user,
-                    message_count=total,
-                    window_hours=rule.window_hours,
-                ),
-                now,
-            )
+        for detection in due:
+            await self._record_hit(detection, now)
 
     @staticmethod
-    async def _count_recent_messages(
-        session: AsyncSession, group_ids: list[int], tg_user_id: int, since_hour: datetime
-    ) -> int:
-        total = await session.scalar(
-            select(func.coalesce(func.sum(ActivityBucket.count), 0)).where(
-                ActivityBucket.group_id.in_(group_ids),
-                ActivityBucket.tg_user_id == tg_user_id,
-                ActivityBucket.hour >= since_hour,
+    async def _sum_recent_messages(
+        session: AsyncSession,
+        group_ids: tuple[int, ...],
+        tg_user_ids: list[int],
+        since_hour: datetime,
+    ) -> dict[int, int]:
+        """since_hour 부터 지금까지, 유저별 메시지 수(한 방의 그룹 행들을 합친 값)."""
+        totals: dict[int, int] = {}
+        for start in range(0, len(tg_user_ids), IN_CHUNK):
+            rows = await session.execute(
+                select(ActivityBucket.tg_user_id, func.sum(ActivityBucket.count))
+                .where(
+                    ActivityBucket.group_id.in_(group_ids),
+                    ActivityBucket.tg_user_id.in_(tg_user_ids[start : start + IN_CHUNK]),
+                    ActivityBucket.hour >= since_hour,
+                )
+                .group_by(ActivityBucket.tg_user_id)
             )
-        )
-        return int(total or 0)
+            totals.update((tg_user_id, int(total)) for tg_user_id, total in rows)
+        return totals
 
     @staticmethod
     async def _has_activity_hit_since(
         session: AsyncSession,
-        group_ids: list[int],
+        group_ids: tuple[int, ...],
         tg_user_id: int,
         rule_id: int,
         since: datetime,
