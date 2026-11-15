@@ -1,0 +1,12 @@
+# 실행에 필요한 패키지.  pip install -r requirements.txt
+fastapi>=0.115
+uvicorn>=0.30
+sqlalchemy[asyncio]>=2.0.30
+aiosqlite>=0.20
+pydantic>=2.7
+pydantic-settings>=2.3
+telethon>=1.36
+argon2-cffi>=23.1
+itsdangerous>=2.2
+cryptography>=42
+python-multipart>=0.0.9
